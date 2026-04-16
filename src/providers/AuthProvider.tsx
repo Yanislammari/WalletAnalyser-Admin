@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useCallback } from "react";
 import type { UserResponse } from "../responses/UserResponse";
 import type { User } from "../models/User";
 import AuthService from "../services/AuthService";
-import type { Login2FAPayload } from "../payloads/LoginPayload";
+import type { Login2FAPayload, Resend2FaPayload } from "../payloads/LoginPayload";
 
 interface AuthContextType {
   user: User | null;
@@ -10,6 +10,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   login: (email: string, password: string) => Promise<void>;
   login2Fa: (code: string) => Promise<void>;
+  resend2Fa: () => Promise<void>;
   logout: () => void;
 }
 
@@ -42,12 +43,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const login = useCallback(async (email: string, password: string) => {
     try {
       const response = await authService.login({ email, password });
-      const mappedUser = mapUserResponseToUser(response.user);
       setToken(response.token);
-      setUser(mappedUser);
-
       localStorage.setItem("token", response.token);
-      localStorage.setItem("user", JSON.stringify(mappedUser));
     } catch (error: any) {
       throw new Error(error.message || "Login failed");
     }
@@ -55,11 +52,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const login2Fa = useCallback(async (code: string) => {
     try {
-      if (!token) {
+      if (!localStorage.getItem("token")) {
         throw new Error("No token found. Please login first.");
       }
-      console.log("Login successful:", token);
-      const response = await authService.login2Fa({ code, token } as Login2FAPayload);
+      const tokenFromStorage = localStorage.getItem("token");
+      const response = await authService.login2Fa({ code, token : tokenFromStorage } as Login2FAPayload);
       const mappedUser = mapUserResponseToUser(response.user);
 
       setToken(response.token);
@@ -67,6 +64,23 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
       localStorage.setItem("token", response.token);
       localStorage.setItem("user", JSON.stringify(mappedUser));
+    }
+    catch (error: any) {
+      console.log(error.message)
+      throw new Error(error.message || "2FA Login failed");
+    }
+  }, [authService]);
+
+  const resend2Fa = useCallback(async () => {
+    try {
+      if (!localStorage.getItem("token")) {
+        throw new Error("No token found. Please login first.");
+      }
+      const tokenFromStorage = localStorage.getItem("token");
+      const response = await authService.resend2Fa({token : tokenFromStorage } as Resend2FaPayload);
+      setToken(response.token);
+
+      localStorage.setItem("token", response.token);
     }
     catch (error: any) {
       console.log(error.message)
@@ -82,7 +96,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, token, isAuthenticated, login, login2Fa, logout }}>
+    <AuthContext.Provider value={{ user, token, isAuthenticated, login, login2Fa, resend2Fa, logout }}>
       {children}
     </AuthContext.Provider>
   );

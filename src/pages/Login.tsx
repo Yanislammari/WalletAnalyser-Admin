@@ -6,7 +6,7 @@ import { useAuth } from "../providers/AuthProvider";
 
 const Login: React.FC = () => {
   const navigate: NavigateFunction = useNavigate();
-  const { login, login2Fa } = useAuth();
+  const { login, login2Fa, resend2Fa } = useAuth();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
@@ -45,7 +45,7 @@ const Login: React.FC = () => {
     next[i] = val;           // update the digit at position i
     setOtp(next);
     if (val && i < 5) document.getElementById(`otp-${i + 1}`)?.focus();
-    //auto send
+    if( i === 5 && val != "" ) handle2FALogin(next.join(""));
   };
 
   const handlePaste = (e: React.ClipboardEvent) => {
@@ -53,7 +53,7 @@ const Login: React.FC = () => {
     const paste = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, 6);
     setOtp(paste.split("").concat(Array(6).fill("")).slice(0, 6));
     document.getElementById(`otp-${Math.min(paste.length, 5)}`)?.focus();
-    // auto send
+    if(paste.length === 6) handle2FALogin(paste);
   };
 
   const handleOtpKeyDown = (e: React.KeyboardEvent, i: number) => {
@@ -94,25 +94,25 @@ const Login: React.FC = () => {
     }
   };
 
-  const handle2FALogin = async () => {
-    const code = otp.join(""); // ["4","8","2","9","1","7"] → "482917"
-    if(code.length < 6){
+  const handle2FALogin = async (code? : string) => {
+    const finalCode = code ?? otp.join(""); // ["4","8","2","9","1","7"] → "482917"
+    if(finalCode.length < 6){
       toast.error("The code must be 6 digit")
       return
     }
     setLoading(true);
     try {
-      await login2Fa(code);
-      toast.success("Code regognize");
-      
+      await login2Fa(finalCode);
+      toast.success("Authentication successful!");
+      navigate("/home", { replace: true });
     }
     catch (error: any) {
       toast.error(error.message);
-      if(error.message === "The token has expired, you need to login again"){
-        //setStep("credentials");
+      if(error.message === "The code has expired, you need to login again" || error.message === "No token found. Please login first."){
         setEmail("");
         setPassword("");
         setOtp(["", "", "", "", "", ""]);
+        setStep("credentials");
       }
     }
     finally {
@@ -121,7 +121,24 @@ const Login: React.FC = () => {
   };
 
   const handleResend = async () => {
-    /* call your resend API */
+    setLoading(true);
+    setResendCooldown(30);
+    try {
+      await resend2Fa();
+      toast.success("A new code has been sent, check your spam");
+    }
+    catch (error: any) {
+      toast.error(error.message);
+      if(error.message === "The code has expired, you need to login again" || "No token found. Please login first."){
+        setEmail("");
+        setPassword("");
+        setOtp(["", "", "", "", "", ""]);
+        setStep("credentials");
+      }
+    }
+    finally {
+      setLoading(false);
+    }
   };
 
 
@@ -161,7 +178,7 @@ const Login: React.FC = () => {
           </div>
 
           <button
-            onClick={handle2FALogin}
+            onClick={()=>handle2FALogin(undefined)}
             disabled={otp.some((d) => !d) || loading}
             className={`btn bg-purple-600 hover:bg-purple-700 text-white w-full rounded-xl normal-case text-base border-none mb-4
               ${otp.some((d) => !d) || loading ? "opacity-50 cursor-not-allowed" : ""}`}
