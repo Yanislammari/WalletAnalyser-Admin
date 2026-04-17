@@ -1,10 +1,12 @@
-const Home: React.FC = () => {
+import PageLayout from "../components/Navbar/NavBarPageLayout";
+
+const Users: React.FC = () => {
   return (
-    <div className="home-container">
+    <PageLayout>
       <h1>Welcome to the Wallet Analyser Admin Dashboard</h1>
       <p>Use the navigation menu to access different sections of the dashboard.</p>
-    </div>
+    </PageLayout>
   );
 };
 
-export default Home;
+export default Users;

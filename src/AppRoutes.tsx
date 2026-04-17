@@ -1,14 +1,17 @@
 import type React from "react";
 import { BrowserRouter, Routes, Route } from "react-router";
 import Login from "./pages/Login";
-import Home from "./pages/Home";
+import Users from "./pages/Users";
+import Assets from "./pages/Assets";
+
 
 const AppRoutes: React.FC = () => {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Login />} />
-        <Route path="/home" element={<Home />} />
+        <Route path="/users" element={<Users />} />
+        <Route path="/assets" element={<Assets />} />
       </Routes>
     </BrowserRouter>
   );

@@ -7,8 +7,8 @@ import { useAuth } from "../providers/AuthProvider";
 const Login: React.FC = () => {
   const navigate: NavigateFunction = useNavigate();
   const { login, login2Fa, resend2Fa } = useAuth();
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+  const [email, setEmail] = useState<string>("alexisduplessis2003@gmail.com");
+  const [password, setPassword] = useState<string>("MoiMeme94@");
   const [loading, setLoading] = useState<boolean>(false);
   const [step, setStep] = useState<"credentials" | "2fa">("credentials");
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
@@ -104,7 +104,7 @@ const Login: React.FC = () => {
     try {
       await login2Fa(finalCode);
       toast.success("Authentication successful!");
-      navigate("/home", { replace: true });
+      navigate("/users", { replace: true });
     }
     catch (error: any) {
       toast.error(error.message);

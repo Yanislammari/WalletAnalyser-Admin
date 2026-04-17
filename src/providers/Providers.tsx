@@ -1,5 +1,6 @@
 import React from "react";
 import { AuthProvider } from "./AuthProvider";
+import { NavBarProvider } from "./NavBarProvider";
 
 interface ProvidersProps {
   children: React.ReactNode;
@@ -7,7 +8,9 @@ interface ProvidersProps {
 
 const Providers: React.FC<ProvidersProps> = (props: ProvidersProps) => (
   <AuthProvider>
-    {props.children}
+    <NavBarProvider>
+          {props.children}
+    </NavBarProvider>
   </AuthProvider>
 )
 
