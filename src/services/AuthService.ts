@@ -1,5 +1,6 @@
-import type { Login2FAPayload, LoginPayload, Resend2FaPayload } from "../payloads/LoginPayload";
+import type { Login2FAPayload, LoginPayload, TokenBody } from "../payloads/LoginPayload";
 import type { AuthResponse, FirstFaPayload } from "../responses/AuthResponse";
+import type { UserResponse } from "../responses/UserResponse";
 import { BaseService } from "./BaseService";
 
 class AuthService extends BaseService {
@@ -30,8 +31,15 @@ class AuthService extends BaseService {
     });
   }
 
-  public async resend2Fa(payload: Resend2FaPayload): Promise<FirstFaPayload> {
+  public async resend2Fa(payload: TokenBody): Promise<FirstFaPayload> {
     return this.request<FirstFaPayload>("/auth/resend_code_admin_2FA", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    });
+  }
+
+  public async authentificationCheck(payload: TokenBody): Promise<UserResponse> {
+    return this.request<UserResponse>("/auth/verify-token-admin", {
       method: "POST",
       body: JSON.stringify(payload),
     });

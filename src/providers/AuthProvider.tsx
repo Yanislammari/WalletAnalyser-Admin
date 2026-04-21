@@ -2,15 +2,17 @@ import React, { createContext, useContext, useState, useCallback } from "react";
 import type { UserResponse } from "../responses/UserResponse";
 import type { User } from "../models/User";
 import AuthService from "../services/AuthService";
-import type { Login2FAPayload, Resend2FaPayload } from "../payloads/LoginPayload";
+import type { Login2FAPayload, TokenBody } from "../payloads/LoginPayload";
+import { Navigate } from "react-router-dom";
 
 interface AuthContextType {
   user: User | null;
   token: string | null;
-  isAuthenticated: boolean;
+  isAuthentificated: boolean | null;
   login: (email: string, password: string) => Promise<void>;
   login2Fa: (code: string) => Promise<void>;
   resend2Fa: () => Promise<void>;
+  checkAuth: () => Promise<void>
   logout: () => void;
 }
 
@@ -38,7 +40,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const authService = AuthService.getInstance();
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
-  const isAuthenticated = !!token;
+  const [isAuthentificated, setIsAuthentificated] = useState<boolean | null>(null)
 
   const login = useCallback(async (email: string, password: string) => {
     try {
@@ -61,6 +63,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
       setToken(response.token);
       setUser(mappedUser);
+      setIsAuthentificated(true)
 
       localStorage.setItem("token", response.token);
       localStorage.setItem("user", JSON.stringify(mappedUser));
@@ -77,7 +80,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         throw new Error("No token found. Please login first.");
       }
       const tokenFromStorage = localStorage.getItem("token");
-      const response = await authService.resend2Fa({token : tokenFromStorage } as Resend2FaPayload);
+      const response = await authService.resend2Fa({token : tokenFromStorage } as TokenBody);
       setToken(response.token);
 
       localStorage.setItem("token", response.token);
@@ -88,15 +91,36 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   }, [authService]);
 
+  const checkAuth = useCallback(async () => {
+    try {
+      const tokenFromStorage = localStorage.getItem("token");
+      const user = await authService.authentificationCheck({token : tokenFromStorage } as TokenBody);
+      const mappedUser = mapUserResponseToUser(user);
+      setUser(mappedUser);
+      localStorage.setItem("user", JSON.stringify(mappedUser));
+      setIsAuthentificated(true)
+    }
+    catch (error: any) {
+      console.log(error.message)
+      setIsAuthentificated(false)
+    }
+  }, [authService]);
+
   const logout = useCallback(() => {
     setUser(null);
     setToken(null);
+    setIsAuthentificated(false)
     localStorage.removeItem("token");
     localStorage.removeItem("user");
+    <Navigate
+      to={`/`}
+      state={{ from: location }}
+      replace
+    />
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, token, isAuthenticated, login, login2Fa, resend2Fa, logout }}>
+    <AuthContext.Provider value={{ user, token, isAuthentificated, login, login2Fa, resend2Fa, checkAuth ,logout }}>
       {children}
     </AuthContext.Provider>
   );

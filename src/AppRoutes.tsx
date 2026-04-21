@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router";
 import Login from "./pages/Login";
 import Users from "./pages/Users";
 import Assets from "./pages/Assets";
+import AuthWrapper from "./components/AutoAuthentificator/AuthWrapper";
 
 
 const AppRoutes: React.FC = () => {
@@ -10,8 +11,8 @@ const AppRoutes: React.FC = () => {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Login />} />
-        <Route path="/users" element={<Users />} />
-        <Route path="/assets" element={<Assets />} />
+          <Route path="/users" element={<AuthWrapper><Users /></AuthWrapper>} />
+          <Route path="/assets" element={<AuthWrapper><Assets /></AuthWrapper>} />
       </Routes>
     </BrowserRouter>
   );

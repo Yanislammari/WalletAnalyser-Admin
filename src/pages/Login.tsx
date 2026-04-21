@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, type NavigateFunction } from "react-router-dom";
+import { useLocation, useNavigate, type NavigateFunction } from "react-router-dom";
 import { toast } from "sonner";
 import Background from "../components/Background";
 import { useAuth } from "../providers/AuthProvider";
 
 const Login: React.FC = () => {
   const navigate: NavigateFunction = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/";
   const { login, login2Fa, resend2Fa } = useAuth();
   const [email, setEmail] = useState<string>("alexisduplessis2003@gmail.com");
   const [password, setPassword] = useState<string>("MoiMeme94@");
@@ -104,7 +106,12 @@ const Login: React.FC = () => {
     try {
       await login2Fa(finalCode);
       toast.success("Authentication successful!");
-      navigate("/users", { replace: true });
+      if(from == '/'){
+        navigate("/users", { replace: true });
+      }
+      else{
+        navigate(from, { replace: true });
+      }
     }
     catch (error: any) {
       toast.error(error.message);

@@ -8,6 +8,6 @@ export interface Login2FAPayload {
   token : string
 }
 
-export interface Resend2FaPayload {
+export interface TokenBody {
   token : string
 }
