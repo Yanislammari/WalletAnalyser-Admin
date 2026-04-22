@@ -1,7 +1,7 @@
 import type React from "react";
 import { BrowserRouter, Routes, Route } from "react-router";
 import Login from "./pages/Login";
-import Users from "./pages/Users";
+import Users from "./pages/users/Users";
 import Assets from "./pages/Assets";
 import AuthWrapper from "./components/AutoAuthentificator/AuthWrapper";
 
@@ -11,7 +11,7 @@ const AppRoutes: React.FC = () => {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Login />} />
-          <Route path="/users" element={<AuthWrapper><Users /></AuthWrapper>} />
+          <Route path="/users" element={<Users />} />
           <Route path="/assets" element={<AuthWrapper><Assets /></AuthWrapper>} />
       </Routes>
     </BrowserRouter>

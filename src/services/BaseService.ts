@@ -8,13 +8,11 @@ export interface RequestPayload<T>{
 
 export abstract class BaseService {
   protected baseUrl: string;
-  private logout : () => void;
-  private token : string | null
+  //private logout : () => void;
 
   constructor() {
     this.baseUrl = BACKEND_BASE_URL;
-    this.logout = useAuth().logout;
-    this.token = useAuth().token;
+    //this.logout = useAuth().logout;
   }
 
   protected async request<T>(
@@ -28,7 +26,7 @@ export abstract class BaseService {
       headers = {
         ...(options.headers as Record<string, string>),
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${this.token}`
+        "Authorization": `Bearer ${localStorage.getItem("token")}`
       };
     }
 
@@ -39,8 +37,8 @@ export abstract class BaseService {
 
     if (!res.ok) {
       const error = await res.json().catch(() => ({ message: "Request failed" }));
-      if(res.status == 401){
-        this.logout
+      if(res.status == ( 401 | 400 )){
+        //this.logout
       }
       throw new Error(error.message || "Request failed");
     }

@@ -112,6 +112,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setIsAuthentificated(false)
     localStorage.removeItem("token");
     localStorage.removeItem("user");
+    if(location.pathname == "/"){
+      return;
+    }
     <Navigate
       to={`/`}
       state={{ from: location }}
