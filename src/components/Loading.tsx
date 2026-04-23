@@ -3,7 +3,6 @@ const styles = {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    height: "100vh",
   },
   spinner: {
     width: "50px",
@@ -15,12 +14,32 @@ const styles = {
   }
 };
 
-const Loading : React.FC = () => {
+interface LoadingProps {
+  style?: React.CSSProperties;
+  spinnerSize?: number;
+  fullPage?: boolean;
+}
+
+const Loading: React.FC<LoadingProps> = ({ style, spinnerSize = 50, fullPage = true }) => {
+  const containerStyle = {
+    ...styles.container,
+    ...(fullPage && { height: "100vh" }),
+    ...style,
+  };
+
+  const spinnerStyle = {
+    ...styles.spinner,
+    width: `${spinnerSize}px`,
+    height: `${spinnerSize}px`,
+    border: `${Math.max(2, spinnerSize / 10)}px solid #eee`,
+    borderTop: `${Math.max(2, spinnerSize / 10)}px solid #7c3fe8`,
+  };
+
   return (
-    <div style={styles.container}>
-      <div style={styles.spinner}></div>
+    <div style={containerStyle}>
+      <div style={spinnerStyle} />
     </div>
   );
-}
+};
 
 export default Loading;

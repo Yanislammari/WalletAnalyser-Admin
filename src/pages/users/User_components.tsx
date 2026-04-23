@@ -1,5 +1,7 @@
 import { useState } from "react";
 import type { User } from "../../models/User";
+import Loading from "../../components/Loading";
+import { ConfirmDialog } from "../../components/Confirm/Confirm";
 
 /* ───────────────────── StatCard ───────────────────── */
 
@@ -53,7 +55,7 @@ function SubscriptionBadge({ isPaid }: SubscriptionBadgeProps) {
 interface BanToggleProps {
   userId: string;
   initialBan: boolean;
-  onToggle: (userId: string, value: boolean) => void;
+  onToggle: (userId : string, ban : boolean, setLoading : React.Dispatch<React.SetStateAction<boolean>>, setBan :  React.Dispatch<React.SetStateAction<boolean>>) => void;
 }
 
 function BanToggle({
@@ -62,25 +64,36 @@ function BanToggle({
   onToggle,
 }: BanToggleProps) {
   const [banned, setBanned] = useState<boolean>(initialBan);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const handleChange = () => {
     const newVal = !banned;
-    setBanned(newVal);
-    onToggle(userId, newVal);
+    onToggle(userId, newVal , setLoading, setBanned);
   };
 
   return (
     <div className="toggle-wrap">
-        <button
-          onClick={() => handleChange()}
-          className={`toggle-btn ${banned ? "toggled" : ""}`}
+      {loading ? (
+        <Loading style={{ width: '100%', height: '100%' }} fullPage={false} spinnerSize={20} />
+      ) : (
+        <>
+        <ConfirmDialog
+          title="Ban user"
+          description="This will restrict the user's access. You can reverse this at any time."
+          confirmLabel= {banned ? "User will be active again" : "User will be ban"}
+          cancelLabel="Cancel"
+          variant="danger"
+          onConfirm={handleChange}
         >
-          <div className="toggle-thumb" /> 
-        </button>
-
-      <span className={`ban-label ${banned ? "ban-on" : "ban-off"}`}>
-        {banned ? "Banned" : "Active"}
-      </span>
+          <button className={`toggle-btn ${banned ? "toggled" : ""}`}>
+            <div className="toggle-thumb" />
+          </button>
+        </ConfirmDialog>
+          <span className={`ban-label ${banned ? "ban-on" : "ban-off"}`}>
+            {banned ? "Banned" : "Active"}
+          </span>
+        </>
+      )}
     </div>
   );
 }
@@ -89,7 +102,7 @@ function BanToggle({
 
 export interface UserRowProps {
   user: User;
-  onToggle: (userId: string, value: boolean) => void;
+  onToggle: (userId : string, ban : boolean, setLoading : React.Dispatch<React.SetStateAction<boolean>>, setBan :  React.Dispatch<React.SetStateAction<boolean>>) => void;
 }
 
 export function UserRow({ user, onToggle }: UserRowProps) {

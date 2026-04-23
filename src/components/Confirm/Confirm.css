@@ -1,0 +1,105 @@
+.dialog-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.dialog-box {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1rem;
+  width: 360px;
+  max-width: 90vw;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+}
+
+.dialog-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.dialog-icon-wrap {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.dialog-icon-wrap[data-variant="danger"]  { background: #fee2e2; color: #dc2626; }
+.dialog-icon-wrap[data-variant="warning"] { background: #fef9c3; color: #ca8a04; }
+.dialog-icon-wrap[data-variant="info"]    { background: #dbeafe; color: #2563eb; }
+
+.dialog-icon {
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.dialog-title {
+  font-size: 15px;
+  font-weight: 500;
+  flex: 1;
+}
+
+.dialog-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #9ca3af;
+  font-size: 16px;
+  padding: 2px;
+  line-height: 1;
+  transition: color 0.15s;
+}
+
+.dialog-close:hover { color: #374151; }
+
+.dialog-description {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0 0 1.25rem;
+  line-height: 1.6;
+}
+
+.dialog-alert {
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  margin-bottom: 0px;
+  line-height: 1.5;
+}
+
+.dialog-alert--success { background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; }
+.dialog-alert--error   { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.btn {
+  padding: 8px 16px;
+  font-size: 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: opacity 0.15s;
+  border: 1px solid transparent;
+  box-shadow: none;
+}
+
+.btn:hover { opacity: 0.85; }
+
+.btn-secondary { background: #f3f4f6; color: black; border-color: #e5e7eb; }
+.btn-danger    { background: #fee2e2; color: #dc2626; border-color: #fecaca; }
+.btn-warning   { background: #fef9c3; color: #ca8a04; border-color: #fde68a; }
+.btn-info      { background: #dbeafe; color: #2563eb; border-color: #bfdbfe; }

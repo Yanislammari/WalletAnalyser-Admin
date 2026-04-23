@@ -64,17 +64,24 @@
   display: inline-flex; align-items: center; gap: 5px;
   font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 20px;
 }
-.sub-yes { background: #f6fffa; color: #12883b; }
-.sub-no  { background: #fff8fb; color: #b31e5a; }
+.sub-yes { background: #f8f9ff; color: #5a22c4; }
+.sub-no  { background: #fff9fa; color: #b31e5a; }
 .sub-icon {
   width: 14px; height: 14px; border-radius: 50%;
   display: inline-flex; align-items: center; justify-content: center;
   font-size: 9px; font-weight: 700;
 }
-.sub-yes .sub-icon { background: #1e8a43; color: white; }
+.sub-yes .sub-icon { background: #5a22c4; color: white; }
 .sub-no  .sub-icon { background: #b52d63; color: white; }
 
 .toggle-wrap { display: flex; align-items: center; gap: 0px; }
+.toggle-wrap.loading-state {
+  width: fit-content;
+}
+.toggle-wrap.loading-state .loading-component {
+  width: 100%;
+  height: 100%;
+}
 
 .toggle-btn {
   background-color: #c9d1fd;
@@ -116,3 +123,10 @@
 }
 .ban-on  { background: #fff9fa; color: #b52d63; }
 .ban-off { background: #f8f9ff; color: #5a22c4; }
+
+.page-error {
+  font-size: 13px;
+  color: #dc2626;
+  margin-top: 8px;
+  text-align: center;
+}
