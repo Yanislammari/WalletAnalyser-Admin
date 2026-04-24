@@ -1,5 +1,5 @@
-import type { BanUserPayload } from "../payloads/UserPayload";
-import type { UserResponse, UsersWithDataResponseDto } from "../responses/UserResponse";
+import type { AddSuperUserPayload, BanUserPayload } from "../payloads/UserPayload";
+import type { UserDto, UserResponse, UsersWithDataResponseDto } from "../responses/UserResponse";
 import { BaseService } from "./BaseService";
 
 class UserService extends BaseService {
@@ -32,6 +32,13 @@ class UserService extends BaseService {
   public async banUser(payload: BanUserPayload, userId : string): Promise<UserResponse> {
     return this.request<UserResponse>(this.base_url_user + userId, {
       method: "PATCH",
+      body: JSON.stringify(payload),
+    });
+  }
+
+  public async addSuperUser(payload: AddSuperUserPayload): Promise<UserDto> {
+    return this.request<UserDto>(this.base_url_user + "register_super_user", {
+      method: "POST",
       body: JSON.stringify(payload),
     });
   }

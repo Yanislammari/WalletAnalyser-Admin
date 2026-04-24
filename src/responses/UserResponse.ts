@@ -1,5 +1,9 @@
 import type { UserType } from "../enums/UserType";
 
+export interface UserDto {
+  user : UserResponse;
+}
+
 export interface UserResponse {
   id: string;
   email: string;

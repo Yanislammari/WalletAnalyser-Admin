@@ -30,8 +30,8 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
   const handleConfirm = async () => {
     try {
       await onConfirm();
-      setAlert({ type: "success", message: "Done!" });
-      setTimeout(() => { setOpen(false); setAlert(null); }, 1800);
+      setOpen(false)
+      setAlert(null)
     } catch {
       setAlert({ type: "error", message: "Something went wrong." });
     }

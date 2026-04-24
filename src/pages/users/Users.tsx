@@ -11,6 +11,7 @@ import ErrorContainer from "../../components/Error";
 import { Pagination } from "../../components/Pagination/Pagination";
 import { pageSize } from "../../constants/pageSize";
 import SearchBar from "../../components/SearchBar/SearchBar";
+import AccordionForm, { type FormProps } from "./AddSuperUser";
 
 const Users: React.FC = () => {
   return (
@@ -29,6 +30,8 @@ const AdminDashboard : React.FC = () => {
   const [pageLoading, setPageLoading] = useState<boolean>(false)
   const [pageError, setPageError] = useState<string | null>(null)
   const [search , setSearch] = useState<string>("")
+  const [ form, setForm] = useState<FormProps>({firstName : "",lastName : "",email : ""})
+  const [ formLoading, setFormLoading ] = useState(false);
 
   const stats = [
     { label: "Total users",     value: data?.numberOfUsers },
@@ -120,6 +123,35 @@ const AdminDashboard : React.FC = () => {
     }
   };
 
+  const handleAddUser = async () => {
+    try {
+      if( form.firstName == "" || form.lastName == "" || form.email == ""){
+        toast.error("All fields are required")
+        return
+      }
+      setFormLoading(true)
+      const response = await userService.addSuperUser(form)
+      const user = response.user
+      toast.success(`Super user ${user.email} added successfully`)
+      setData((prev) => {
+        if (!prev) return prev;
+        const updated = [...prev.users, user].sort((a, b) =>
+          a.email.localeCompare(b.email)
+        );
+        return {
+          ...prev,
+          numberOfUsers: prev.numberOfUsers + 1,
+          numberOfNewMonthlyUsers: prev.numberOfNewMonthlyUsers + 1,
+          users: updated,
+        };
+      });
+    } catch(e : any) {
+      toast.error(e.message)
+    } finally {
+      setFormLoading(false)
+    }
+  }
+
   if (loading) {
     return (
       <Loading />
@@ -136,6 +168,8 @@ const AdminDashboard : React.FC = () => {
     <>
       <div className="dash-wrap">
         <p className="dash-title">User Dashboard</p>
+
+        <AccordionForm  form={form} setForm={setForm} handleSend={handleAddUser} loading={formLoading}/>
 
         <div className="stats-bar">
           {stats.map((s) => (
