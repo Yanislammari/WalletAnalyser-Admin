@@ -106,11 +106,11 @@ const Login: React.FC = () => {
     try {
       await login2Fa(finalCode);
       toast.success("Authentication successful!");
-      if(from == '/'){
-        navigate("/users", { replace: true });
+      if(from != '/'){
+        navigate(from, { replace: true });
       }
       else{
-        navigate(from, { replace: true });
+        navigate("/users", { replace: true });
       }
     }
     catch (error: any) {

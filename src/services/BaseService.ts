@@ -1,5 +1,4 @@
 import { BACKEND_BASE_URL } from "../constants/env";
-import { useAuth } from "../providers/AuthProvider";
 
 export interface RequestPayload<T>{
   data : T,
@@ -8,11 +7,9 @@ export interface RequestPayload<T>{
 
 export abstract class BaseService {
   protected baseUrl: string;
-  //private logout : () => void;
 
   constructor() {
     this.baseUrl = BACKEND_BASE_URL;
-    //this.logout = useAuth().logout;
   }
 
   protected async request<T>(
@@ -37,8 +34,9 @@ export abstract class BaseService {
 
     if (!res.ok) {
       const error = await res.json().catch(() => ({ message: "Request failed" }));
-      if(res.status == ( 401 | 400 )){
-        //this.logout
+      if (res.status === 401 || res.status === 400) {
+        window.dispatchEvent(new Event("auth:logout"));
+        throw new Error(error.message || "Your session has expired. Please login again.");
       }
       throw new Error(error.message || "Request failed");
     }

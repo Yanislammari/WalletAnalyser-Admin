@@ -1,9 +1,9 @@
-import React, { createContext, useContext, useState, useCallback } from "react";
+import React, { createContext, useContext, useState, useCallback, useEffect } from "react";
 import type { UserResponse } from "../responses/UserResponse";
 import type { User } from "../models/User";
 import AuthService from "../services/AuthService";
 import type { Login2FAPayload, TokenBody } from "../payloads/LoginPayload";
-import { Navigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 interface AuthContextType {
   user: User | null;
@@ -41,6 +41,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [isAuthentificated, setIsAuthentificated] = useState<boolean | null>(null)
+  const navigate = useNavigate();
+  const location = useLocation();
+
 
   const login = useCallback(async (email: string, password: string) => {
     try {
@@ -107,19 +110,21 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }, [authService]);
 
   const logout = useCallback(() => {
+    console.log("Got Event")
     setUser(null);
     setToken(null);
     setIsAuthentificated(false)
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    if(location.pathname == "/"){
-      return;
+    if (location.pathname !== "/") {
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      navigate("/", { replace: true, state: { from: location } });
     }
-    <Navigate
-      to={`/`}
-      state={{ from: location }}
-      replace
-    />
+  }, []);
+
+  useEffect(() => {
+    const handler = () => logout();
+    window.addEventListener("auth:logout", handler);
+    return () => window.removeEventListener("auth:logout", handler);
   }, []);
 
   return (
