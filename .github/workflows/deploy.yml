@@ -27,7 +27,9 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t walletanalyseracr.azurecr.io/walletanalyser-admin:latest .
+          docker build \
+            --build-arg VITE_BACKEND_BASE_URL=${{ secrets.VITE_BACKEND_BASE_URL }} \
+            -t walletanalyseracr.azurecr.io/walletanalyser-admin:latest .
 
       - name: Push Docker image
         run: |
