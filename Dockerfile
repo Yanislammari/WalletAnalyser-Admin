@@ -1,6 +1,10 @@
 FROM node:20-alpine AS builder
 
 WORKDIR /app
+
+ARG VITE_BACKEND_BASE_URL
+ENV VITE_BACKEND_BASE_URL=$VITE_BACKEND_BASE_URL
+
 COPY package.json package-lock.json ./
 RUN npm ci --production=false
 COPY . .
