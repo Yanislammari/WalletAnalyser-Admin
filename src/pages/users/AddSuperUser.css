@@ -1,0 +1,127 @@
+.accordion-wrapper {
+  font-family: inherit;
+  width: fit-content;
+  margin-bottom: 15px;
+  width: 100%;
+}
+
+/* Toggle button */
+.accordion-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #efeeff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  padding: 6px 10px;
+  width: 100%;
+  color: #7c3fe8;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.accordion-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #7c3fe8;
+  flex-shrink: 0;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.accordion-arrow.open {
+  transform: rotate(180deg);
+}
+
+/* Body */
+.accordion-body {
+  margin-top: 10px;
+  background: #ffffff;
+  border: 1.5px solid #AFA9EC;
+  border-radius: 12px;
+  padding: 20px 18px 18px;
+}
+
+/* Name row */
+.accordion-name-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.accordion-field {
+  flex: 1;
+  margin-bottom: 14px;
+}
+
+.accordion-name-row .accordion-field {
+  margin-bottom: 0;
+}
+
+/* Label */
+.accordion-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  color: black;
+  margin-bottom: 4px;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+/* Input */
+.accordion-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 9px 11px;
+  font-size: 14px;
+  border: 0.5px solid black;
+  border-radius: 8px;
+  background: #fff;
+  color: #26215C;
+  outline: none;
+  font-family: inherit;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.accordion-input:focus {
+  border-color: #7c3fe8;
+  box-shadow: 0 0 0 3px rgba(69, 49, 248, 0.15);
+}
+
+.accordion-input:disabled {
+  background: #f3f2fc;
+  opacity: 0.7;
+}
+
+/* Send button */
+.accordion-send-btn {
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  background: #7c3fe8;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: inherit;
+  transition: background 0.2s;
+}
+
+.accordion-send-btn:hover:not(:disabled) {
+  opacity: 0.5;
+}
+
+.accordion-send-btn:disabled {
+  background: #AFA9EC;
+  cursor: not-allowed;
+}
