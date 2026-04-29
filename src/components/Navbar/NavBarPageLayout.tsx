@@ -12,7 +12,7 @@ const PageLayout : React.FC<PageLayoutProps> = ({ children }) => {
   return (
     <div
       className={`page transition-all duration-300 ease-in-out ${
-        isOpen ? "ml-63.75" : "ml-17.75"
+        isOpen ? "ml-61" : "ml-15"
     }`}
     >
       <Navbar />

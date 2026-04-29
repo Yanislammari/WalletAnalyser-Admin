@@ -1,12 +1,9 @@
 import { useState } from "react";
 import Loading from "../../components/Loading";
 import { ConfirmDialog } from "../../components/Confirm/Confirm";
-import "../../style/AccordionForm.css";
 
 export interface FormProps {
-  firstName: string;
-  lastName: string;
-  email: string;
+  country_name: string;
 }
 
 interface AccordionFormProps {
@@ -16,7 +13,7 @@ interface AccordionFormProps {
   loading: boolean;
 }
 
-export default function AccordionForm({ handleSend, form, setForm, loading }: AccordionFormProps) {
+export default function AddCountryForm({ handleSend, form, setForm, loading }: AccordionFormProps) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -35,7 +32,7 @@ export default function AccordionForm({ handleSend, form, setForm, loading }: Ac
             />
           </svg>
         </span>
-        <span>Invite a user</span>
+        <span>Create a country</span>
       </button>
 
       {/* Accordion body */}
@@ -45,46 +42,22 @@ export default function AccordionForm({ handleSend, form, setForm, loading }: Ac
           {/* First row: firstName + lastName */}
           <div className="accordion-name-row">
             <div className="accordion-field">
-              <label className="accordion-label">First name</label>
+              <label className="accordion-label">Country name</label>
               <input
                 className="accordion-input"
                 type="text"
-                value={form.firstName}
-                onChange={(e) => setForm((f) => ({ ...f, firstName: e.target.value }))}
-                placeholder="Sophie"
+                value={form.country_name}
+                onChange={(e) => setForm(() => ({ country_name: e.target.value }))}
+                placeholder="Fr"
                 disabled={loading}
               />
             </div>
-            <div className="accordion-field">
-              <label className="accordion-label">Last name</label>
-              <input
-                className="accordion-input"
-                type="text"
-                value={form.lastName}
-                onChange={(e) => setForm((f) => ({ ...f, lastName: e.target.value }))}
-                placeholder="Martin"
-                disabled={loading}
-              />
-            </div>
-          </div>
-
-          {/* Second row: email */}
-          <div className="accordion-field">
-            <label className="accordion-label">Email</label>
-            <input
-              className="accordion-input"
-              type="email"
-              value={form.email}
-              onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
-              placeholder="sophie@example.com"
-              disabled={loading}
-            />
           </div>
 
           {/* Send button */}
           <ConfirmDialog
-            title="Add someone"
-            description="This will create a user that get free access to the application, you can stil ban him at any time"
+            title="Add a country"
+            description="This will create a country, you can stil delete it at any time"
             confirmLabel= "Confirm"
             cancelLabel="Cancel"
             variant="danger"

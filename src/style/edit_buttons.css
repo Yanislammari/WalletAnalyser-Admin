@@ -1,0 +1,112 @@
+/* ───────────────────── Edit Button (view mode) ───────────────────── */
+
+.edit-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #7c3fe8;
+  background: transparent;
+  border: 1px solid #7c3fe8;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.edit-btn:hover {
+  background: #7c3fe8;
+  color: #fff;
+}
+
+/* ───────────────────── Edit mode wrapper ───────────────────── */
+
+.edit-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* ───────────────────── Inline input ───────────────────── */
+
+.edit-input {
+  flex: 1;
+  min-width: 120px;
+  padding: 5px 10px;
+  font-size: 0.875rem;
+  color: #1a1a2e;
+  background: #f5f7ff;
+  border: 1.5px solid #7c3fe8;
+  border-radius: 6px;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.edit-input:focus {
+  border-color: #7c3fe8;
+  box-shadow: 0 0 0 3px rgba(74, 111, 165, 0.15);
+}
+
+/* ───────────────────── Action buttons group ───────────────────── */
+
+.edit-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.action-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 11px;
+  font-size: 0.78rem;
+  font-weight: 500;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
+  white-space: nowrap;
+}
+
+.action-btn:active {
+  transform: scale(0.96);
+}
+
+/* Save */
+.save-btn {
+  color: white;
+  background: #7c3fe8;
+  border-color: #7c3fe8;
+}
+
+.save-btn:hover {
+  background: #af91e2;
+  color: black;
+}
+
+/* Delete */
+.delete-btn {
+  color: #c0392b;
+  background: #fdf0ee;
+  border-color: #c0392b;
+}
+
+.delete-btn:hover {
+  background: #c0392b;
+  color: #fff;
+  box-shadow: 0 2px 6px rgba(192, 57, 43, 0.25);
+}
+
+/* Exit */
+.exit-btn {
+  color: #3f3f3f;
+  background: #f2f2f2;
+  border-color: #ccc;
+}
+
+.exit-btn:hover {
+  background: #e0e0e0;
+  color: #333;
+}

@@ -1,4 +1,3 @@
-import "./User.css"
 import PageLayout from "../../components/Navbar/NavBarPageLayout";
 import { useEffect, useState } from "react";
 import type { UsersWithDataResponseDto } from "../../responses/UserResponse";
@@ -12,6 +11,7 @@ import { Pagination } from "../../components/Pagination/Pagination";
 import { pageSize } from "../../constants/pageSize";
 import SearchBar from "../../components/SearchBar/SearchBar";
 import AccordionForm, { type FormProps } from "./AddSuperUser";
+import "../../style/TableTitle.css";
 
 const Users: React.FC = () => {
   return (
@@ -196,7 +196,7 @@ const AdminDashboard : React.FC = () => {
                 </tr>
               </thead>
               <tbody>
-                {data.users.filter(value => value.email.startsWith(search)).map((user) => (
+                {data.users.filter(value => value.email.toLowerCase().startsWith(search.toLowerCase())).map((user) => (
                   <UserRow key={user.id} user={user} onToggle={handleBanToggle} />
                 ))}
               </tbody>

@@ -1,4 +1,4 @@
-.dash-wrap * { box-sizing: border-box; margin: 0; padding: 0; }
+.dash-wrap * { box-sizing: border-box }
 .dash-wrap {
   font-family: 'DM Sans', 'Segoe UI', sans-serif;
   background: #faf7ff;
@@ -6,6 +6,7 @@
   padding: 2.5rem 1.5rem;
   color: #2d1a52;
 }
+
 .dash-title {
   font-size: 28px; font-weight: 700;
   background: linear-gradient(135deg, #7c3fe8, #f04e8a);
@@ -59,6 +60,8 @@
 }
 .name-cell { display: flex; align-items: center; }
 .email-cell { color: #7c3fe8; font-size: 13px; }
+
+.actions-cell { display: flex; align-items: center;}
 
 .sub-badge {
   display: inline-flex; align-items: center; gap: 5px;

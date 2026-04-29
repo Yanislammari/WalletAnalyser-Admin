@@ -101,27 +101,26 @@
 
 /* Send button */
 .accordion-send-btn {
-  width: 100%;
-  padding: 10px;
-  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 20px;
+  font-size: 13px;
   font-weight: 600;
+  color: white;
   background: #7c3fe8;
-  color: #fff;
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: inherit;
-  transition: background 0.2s;
+  transition: background 0.2s ease;
+  width: 100%;
 }
 
-.accordion-send-btn:hover:not(:disabled) {
-  opacity: 0.5;
+.accordion-send-btn:hover {
+  background: #6a35d0;
 }
 
 .accordion-send-btn:disabled {
-  background: #AFA9EC;
+  background: #a89ee0;
   cursor: not-allowed;
 }
