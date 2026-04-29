@@ -11,3 +11,8 @@ export interface Login2FAPayload {
 export interface TokenBody {
   token : string
 }
+
+export interface ChangePasswordPayload {
+  password: string;
+  newPassword: string;
+}

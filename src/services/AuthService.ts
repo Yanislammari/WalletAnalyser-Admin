@@ -1,4 +1,4 @@
-import type { Login2FAPayload, LoginPayload, TokenBody } from "../payloads/LoginPayload";
+import type { ChangePasswordPayload, Login2FAPayload, LoginPayload, TokenBody } from "../payloads/LoginPayload";
 import type { AuthResponse, FirstFaPayload } from "../responses/AuthResponse";
 import type { UserResponse } from "../responses/UserResponse";
 import { BaseService } from "./BaseService";
@@ -44,6 +44,13 @@ class AuthService extends BaseService {
       body: JSON.stringify(payload),
     });
   }
+
+  public async changePassword(payload: ChangePasswordPayload): Promise<void> {
+    return this.request<void>("/auth/admin-change-password", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    });
+  } 
 }
 
 export default AuthService;
