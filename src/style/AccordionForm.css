@@ -99,6 +99,23 @@
   opacity: 0.7;
 }
 
+.accordion-get-template {
+  font-size: 13px;
+  font-weight: 800;
+  font-size : 1.15rem;
+  color: #5c00fa;
+  cursor: pointer;
+}
+
+.link-red {
+  color: #ff0000;
+}
+
+.link-red:hover {
+  color: blue;
+  text-decoration: underline;
+}
+
 /* Send button */
 .accordion-send-btn {
   display: inline-flex;
@@ -123,4 +140,23 @@
 .accordion-send-btn:disabled {
   background: #a89ee0;
   cursor: not-allowed;
+}
+
+.accordion-file-label {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #5c00fa;
+  background: white;
+  border: 2px solid #5c00fa;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.accordion-file-label:hover {
+  background: #5c00fa;
+  color: white;
 }

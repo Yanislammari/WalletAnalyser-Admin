@@ -9,6 +9,8 @@ import CountriesAllias from "./pages/country-allias/Country_Allias";
 import Sectors from "./pages/sectors/Sectors";
 import SectorsAllias from "./pages/sector-allias/Sector_Allias";
 import SettingsPage from "./pages/settings/Reset_Password";
+import RfrCountry from "./pages/rfrCountry/RfrCountry";
+import RfrRates from "./pages/rfrRates/RfrRates";
 
 
 const AppRoutes: React.FC = () => {
@@ -21,6 +23,8 @@ const AppRoutes: React.FC = () => {
         <Route path="/countries-allias/:country_uuid" element={<AuthWrapper><CountriesAllias/></AuthWrapper>} />
         <Route path="/sectors" element={<AuthWrapper><Sectors/></AuthWrapper>} />
         <Route path="/sectors-allias/:sector_uuid" element={<AuthWrapper><SectorsAllias/></AuthWrapper>} />
+        <Route path="/rfr" element={<AuthWrapper><RfrCountry/></AuthWrapper>} />
+        <Route path="/rfr/:rfr_country_uuid" element={<AuthWrapper><RfrRates/></AuthWrapper>} />
         <Route path="/settings" element={<SettingsPage />} />
     </Routes>
   );

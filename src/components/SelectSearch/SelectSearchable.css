@@ -1,0 +1,105 @@
+/* SelectSearchable.css */
+
+.select-searchable {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border-color, #d1d5db);
+  border-radius: 6px;
+  overflow: hidden;
+  width: 220px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  background: var(--bg, #ffffff);
+  z-index: 1000;
+  top : 100%;
+  left: 0;
+  position : absolute;
+}
+
+.select-searchable__search {
+  padding: 8px 10px;
+  margin-left: -15px;
+  border: none;
+  border-bottom: 1px solid var(--border-color, #d1d5db);
+  font-size: 0.875rem;
+  outline: none;
+  background: var(--bg-subtle, #f9fafb);
+}
+
+.select-searchable__search::placeholder {
+  color: #9ca3af;
+}
+
+.select-searchable__portal {
+  display: flex;
+  margin-top: 29px;
+  flex-direction: column;
+  border: 1px solid var(--border-color, #d1d5db);
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  background: #ffffff;
+  padding-left: 15px; /* 👈 here instead */
+}
+
+.select-searchable__list {
+  list-style: none;
+  margin: 0;
+  padding: 4px 0;
+  margin-left: -15px;
+  max-height: 200px;
+  overflow-y: auto;
+  background-color: white;
+}
+
+.select-searchable__item {
+  padding: 8px 12px;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.select-searchable__item:hover {
+  background: var(--bg-hover, #f3f4f6);
+}
+
+.select-searchable__item--selected {
+  background: var(--accent-subtle, #eff6ff);
+  color: var(--accent, #2563eb);
+  font-weight: 500;
+}
+
+.select-searchable__empty {
+  padding: 8px 12px;
+  font-size: 0.875rem;
+  color: #9ca3af;
+  font-style: italic;
+}
+
+.select-searchable__trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 10px;
+  width: 200px;
+  background: #ffffff;
+  border: 1px solid var(--border-color, #d1d5db);
+  border-radius: 6px;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+
+.select-searchable__trigger:hover {
+  border-color: #2563eb;
+}
+
+.select-searchable__trigger--open {
+  border-color: #2563eb;
+  outline: 2px solid #bfdbfe;
+}
+
+.select-searchable__chevron {
+  font-size: 0.65rem;
+  color: #6b7280;
+  margin-left: 8px;
+}

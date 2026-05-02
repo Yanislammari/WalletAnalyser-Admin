@@ -48,3 +48,11 @@
 .searchbar-clear:hover {
   color: var(--sb-color, white);
 }
+
+.searchbar-input-date {
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 14px;
+  color: var(--sb-color, white);
+}

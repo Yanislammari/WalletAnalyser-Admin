@@ -22,6 +22,7 @@ const menuItems: MenuItem[] = [
   { icon: CountriesIcon, path: '/countries', label: 'Countries' },
   { icon: CurrenciesIcon, path: '/currencies', label: 'Currencies' },
   { icon: RFRIcon, path: '/rfr', label: 'RiskFreeRate' },
+  { icon: RFRIcon, path: '/rfr-rates', label: 'RFR Rates' },
   { icon: SettingsIcon, path: '/settings', label: 'Settings' },
 ];
 

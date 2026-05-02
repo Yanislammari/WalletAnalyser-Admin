@@ -7,7 +7,7 @@ export interface CountryAlliasPayload {
 }
 
 export interface CountriesResponse {
-  countries : CountryResponse[];
+  countries : CountryNameResponse[];
 }
 
 export interface CountryNameResponse {
