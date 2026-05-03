@@ -160,3 +160,42 @@
   background: #5c00fa;
   color: white;
 }
+
+/* Wrapper: full width */
+.accordion-datepicker-wrapper {
+  width: 100%;
+}
+
+/* Input: padding + font size */
+.accordion-datepicker-wrapper .accordion-input {
+  padding: 8px 2rem 8px 2.2rem; /* top | right (clear btn) | bottom | left (icon) */
+  font-size: 15px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Icon: glued to the left */
+.accordion-datepicker-wrapper .react-datepicker__calendar-icon {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 0;
+  width: 16px;
+  height: 16px;
+  pointer-events: none;
+}
+
+/* Clear (×) button: right side */
+.accordion-datepicker-wrapper .react-datepicker__close-icon {
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 0;
+}
+
+.accordion-datepicker-wrapper .react-datepicker__close-icon::after {
+  background-color: transparent;
+  color: #888;
+  font-size: 14px;
+  line-height: 1;
+}

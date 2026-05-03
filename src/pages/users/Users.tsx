@@ -192,6 +192,7 @@ const AdminDashboard : React.FC = () => {
           numberOfUsers: prev.numberOfUsers + 1,
           numberOfNewMonthlyUsers: prev.numberOfNewMonthlyUsers + 1,
           users: updated,
+          length : prev.length + 1
         };
       });
     } catch(e : any) {

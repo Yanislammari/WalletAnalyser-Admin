@@ -29,7 +29,7 @@ const RfrRatesDashboard : React.FC = () => {
   const [rfrRates , setRfrRates] = useState<RfrRateMetaData | null>(null);
   const [loading, setLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
-  const [ form, setForm] = useState<FormProps>({rfr_rate_name : ""})
+  const [ form, setForm] = useState<FormProps>({rfr_percent_rate : null, rfr_date : null})
   const [ formLoading, setFormLoading ] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [limit , setLimit] = useState(100);
@@ -47,12 +47,14 @@ const RfrRatesDashboard : React.FC = () => {
       if (!rfr_country_uuid) return;
       if (!isValidIso(from) || !isValidIso(to)) return;
       try {
+        console.log("MOI")
         if(rfrRates == null) {
           setLoading(true)
         }
         setPageLoading(true);
         setCurrentPage(1);
         const response = await rfrRatesService.getRfrRates(rfr_country_uuid, 0, 100, from, to);
+        setLimit(response.length < 100 ? response.length : 100)
         setRfrRates(response);
       } catch (error: any) {
         toast.error(error.message);
@@ -109,69 +111,66 @@ const RfrRatesDashboard : React.FC = () => {
   };
 
   const handleAddRfrRate = async () => {
-    /**try {
-      if( form.rfr_rate_name == ""){
+    try {
+      const { rfr_date, rfr_percent_rate } = form
+      if(rfr_date == null || rfr_percent_rate == null){
         toast.error("All fields are required")
         return
       }
       setFormLoading(true)
-      const response = await rfrRatesService.postRfrRate(form)
-      const exists = rfrRates?.rfr_rates?.some(item => item.uuid === response.uuid);
-      if (!exists) {
-        setRfrRates((prev) => {
-          if (!prev) return prev;
+      const response = await rfrRatesService.postRfrRate({ rfr_date, rfr_percent_rate}, rfr_country_uuid!)
+      console.log(response.rfr_date)
+      setRfrRates((prev) => {
+        if (!prev) return prev;
+        const updated = [...(prev.rfr_rates ?? []), response].sort((a, b) => new Date(b.rfr_date).getTime() - new Date(a.rfr_date).getTime());
 
-          const updated = [...(prev.rfr_rates ?? []), response].sort((a, b) =>
-            a.rfr_rate_name.localeCompare(b.rfr_rate_name)
-          );
-
-          return {
-            ...prev,
-            rfr_rates: updated,
-          };
-        });
-        toast.success(`RFR rate ${response.rfr_rate_name} added successfully`)
-        return
-      };
-      toast.error(`RFR rate ${response.rfr_rate_name} already exists`)
+        return {
+          ...prev,
+          length : prev.length + 1,
+          rfr_rates: updated,
+        };
+      });
+      toast.success(`RFR rate added successfully`)
     } catch(e : any) {
       toast.error(e.message)
     } finally {
       setFormLoading(false)
-    }**/
+    }
   }
 
-  const handleEditRfrRate = async (uuid: string, newName: string) => {
-    /**try {
-      if( newName == ""){
+  const handleEditRfrRate = async (uuid: string, rfr_date: Date | null, rfr_percent_rate : number | null) => {
+    try {
+      if( rfr_date == null || rfr_percent_rate == null){
         toast.error("All fields are required")
         return
       }
-      const response = await rfrRatesService.patchRfrRate({rfr_rate_name : newName}, uuid)
-        setRfrRates((prev) => {
-          if (!prev) return prev;
+      const response = await rfrRatesService.patchRfrRate({rfr_date, rfr_percent_rate}, uuid)
+      setRfrRates((prev) => {
+        if (!prev) return prev;
 
-          const updated = (prev.rfr_rates ?? [])
-            .map((item) =>
-              item.uuid === uuid ? response : item
-            )
-            .sort((a, b) =>
-              a.rfr_rate_name.localeCompare(b.rfr_rate_name)
-            );
+        const updated = (prev.rfr_rates ?? [])
+          .map((item) =>
+            item.uuid === response.uuid ? response : item
+          )
+          .sort(
+            (a, b) =>
+              new Date(b.rfr_date).getTime() -
+              new Date(a.rfr_date).getTime()
+          );
 
-          return {
-            ...prev,
-            rfr_rates: updated,
-          };
-        });
-      toast.success(`RFR rate ${response.rfr_rate_name} updated successfully`)
+        return {
+          ...prev,
+          rfr_rates: updated,
+        };
+      });
+      toast.success(`RFR rate updated successfully`)
     } catch(e : any) {
       toast.error(e.message)
-    }**/
+    }
   }
 
   const handleDeleteRfrRate = async (uuid: string) => {
-    /**try {
+    try {
       const response = await rfrRatesService.delete(uuid)
       if(response.message === "RFR rate deleted successfully") {
         setRfrRates((prev) => {
@@ -189,7 +188,7 @@ const RfrRatesDashboard : React.FC = () => {
       toast.error(`Something went wrong while deleting this RFR rate`)
     } catch(e : any) {
       toast.error(e.message)
-    }**/
+    }
   }
 
   if (loading) {

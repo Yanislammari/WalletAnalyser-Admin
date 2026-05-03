@@ -1,4 +1,4 @@
-import type { GetRfrRatePayload, RfrRateMetaData } from "../payloads/RfrRatesPayload";
+import type { GetRfrRatePayload, RfrPayload, RfrRateMetaData, RiskFreeRateShort } from "../payloads/RfrRatesPayload";
 import { BaseService } from "./BaseService";
 import type { MessageResponse } from "../responses/ErrorResponse";
 
@@ -23,15 +23,15 @@ class RfrRatesService extends BaseService {
     });
   }
 
-  /**public async postRfrRate(payload: RfrRatePayload): Promise<RfrRate> {
-    return this.request<RfrRate>(this.base_url_rfr_rates, {
+  public async postRfrRate(payload: RfrPayload, uuid : string): Promise<RiskFreeRateShort> {
+    return this.request<RiskFreeRateShort>(this.base_url_rfr_rates + uuid, {
       body: JSON.stringify(payload),
       method: "POST",
     });
   }
 
-  public async patchRfrRate(payload: RfrRatePayload, uuid: string): Promise<RfrRate> {
-    return this.request<RfrRate>(this.base_url_rfr_rates + uuid, {
+  public async patchRfrRate(payload: RfrPayload, uuid: string): Promise<RiskFreeRateShort> {
+    return this.request<RiskFreeRateShort>(this.base_url_rfr_rates + uuid, {
       method: "PATCH",
       body: JSON.stringify(payload),
     });
@@ -41,7 +41,7 @@ class RfrRatesService extends BaseService {
     return this.request<MessageResponse>(this.base_url_rfr_rates + uuid, {
       method: "DELETE",
     });
-  }**/
+  }
 }
 
 export default RfrRatesService;

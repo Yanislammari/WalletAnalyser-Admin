@@ -6,6 +6,11 @@ export interface RiskFreeRateShort {
   rfr_percent_rate : number
 }
 
+export interface RfrPayload {
+  rfr_date : Date
+  rfr_percent_rate : number
+}
+
 export interface GetRfrRatePayload {
   offset : number
   size : number
