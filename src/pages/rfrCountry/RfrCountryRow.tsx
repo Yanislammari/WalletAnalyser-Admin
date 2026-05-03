@@ -9,19 +9,20 @@ import { SelectSearchable, toSelectOptions } from "../../components/SelectSearch
 
 interface EditToggleProps {
   countryName: string;
+  editing: boolean;
+  setEditing: React.Dispatch<React.SetStateAction<boolean>>;
   lastUpdate: string;
   options: CountryNameResponse[];
   onSave: (newUuid : string, newCountryName: string) => void;
   onDelete: () => void;
 }
 
-function EditToggle({ countryName, lastUpdate, options, onSave, onDelete }: EditToggleProps) {
+function EditToggle({ countryName, lastUpdate, options, onSave, onDelete, editing, setEditing }: EditToggleProps) {
   const selectOptions = useMemo(
     () => toSelectOptions(options, (c) => c.uuid, (c) => c.country_name),
     [options]
   );
   const [loading, setLoading] = useState(false);
-  const [editing, setEditing] = useState(false);
   const [selected, setSelected] = useState<string>(countryName);
   const selectRef = useRef<HTMLSelectElement>(null);
 
@@ -130,10 +131,17 @@ export interface RfrCountryRowProps {
 }
 
 export function RfrCountryRow({ rfr_country, countryOptions, onSave, onDelete, onClick }: RfrCountryRowProps) {
+  const [editing, setEditing] = useState<boolean>(false);
   return (
-    <tr onClick={() => onClick?.()}>
+    <tr onClick={()=>{
+      if(!editing) {
+        onClick?.()
+      }
+    }} style={{ cursor: "pointer" }}>
       <EditToggle
         countryName={rfr_country.rfr_country.country_rfr.country_name}
+        editing = {editing}
+        setEditing = {setEditing}
         lastUpdate={rfr_country.last_update}
         options={countryOptions}
         onSave={(newUuid , newName) => onSave?.(rfr_country.rfr_country.uuid, newUuid, newName)}

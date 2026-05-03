@@ -29,7 +29,6 @@ const RfrRatesDashboard : React.FC = () => {
   const [rfrRates , setRfrRates] = useState<RfrRateMetaData | null>(null);
   const [loading, setLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
-  const [search , setSearch] = useState<string>("")
   const [ form, setForm] = useState<FormProps>({rfr_rate_name : ""})
   const [ formLoading, setFormLoading ] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -38,31 +37,39 @@ const RfrRatesDashboard : React.FC = () => {
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
 
-  useEffect(()=>{
-    const fetchRfrRates = async() => {
-      if(!rfr_country_uuid){
-        throw Error("An error occured please reload the page")
-      }
-      setLoading(true)
-      try{
-        const response = await rfrRatesService.getRfrRates(rfr_country_uuid, 0, limit);
-        setRfrRates(response)
-      }
-      catch(error : any){
-        setHasError(true)
+  const isValidIso = (date: string) => {
+    if (!date) return true; // empty is allowed (means "no filter")
+    return /^\d{4}-\d{2}-\d{2}$/.test(date) && !isNaN(new Date(date).getTime());
+  };
+
+  useEffect(() => {
+    const fetchFiltered = async () => {
+      if (!rfr_country_uuid) return;
+      if (!isValidIso(from) || !isValidIso(to)) return;
+      try {
+        if(rfrRates == null) {
+          setLoading(true)
+        }
+        setPageLoading(true);
+        setCurrentPage(1);
+        const response = await rfrRatesService.getRfrRates(rfr_country_uuid, 0, 100, from, to);
+        setRfrRates(response);
+      } catch (error: any) {
         toast.error(error.message);
       } finally {
+        setPageLoading(false);
         setLoading(false)
       }
-    }
-    fetchRfrRates()
-  },[])
+    };
+
+    fetchFiltered();
+  }, [from, to]);
 
   const handleNext = async (direction : number) => {
     try {
       setPageLoading(true);
       const nextPage = currentPage + direction;
-      const response = await rfrRatesService.getRfrRates(rfr_country_uuid!, nextPage *  limit - limit, limit);
+      const response = await rfrRatesService.getRfrRates(rfr_country_uuid!, nextPage *  limit - limit, limit, from, to);
       setRfrRates(response);
       setCurrentPage(nextPage);
     } catch (e: any) {
@@ -77,7 +84,7 @@ const RfrRatesDashboard : React.FC = () => {
       setPageLoading(true);
       const position = (currentPage - 1) * limit;          // current scroll position (0-based offset)
       const newPage = Math.floor(position / newLimit) + 1; // which page contains that position
-      const response = await rfrRatesService.getRfrRates(rfr_country_uuid!, newPage * newLimit - newLimit, newLimit);
+      const response = await rfrRatesService.getRfrRates(rfr_country_uuid!, newPage * newLimit - newLimit, newLimit, from, to);
       setRfrRates(response);
       setLimit(newLimit);
       setCurrentPage(newPage);
@@ -91,7 +98,7 @@ const RfrRatesDashboard : React.FC = () => {
   const handleGoTo = async (page: number) => {
     try {
       setPageLoading(true);
-      const response = await rfrRatesService.getRfrRates(rfr_country_uuid!, page *  limit - limit, limit);
+      const response = await rfrRatesService.getRfrRates(rfr_country_uuid!, page *  limit - limit, limit, from, to);
       setRfrRates(response);
       setCurrentPage(page);
     } catch (e: any) {
@@ -239,16 +246,11 @@ const RfrRatesDashboard : React.FC = () => {
               ) : (
               <tbody>
                 {(() => {
-                  const filtered = rfrRates.rfr_rates.filter(value => {
-                    const d = new Date(value.rfr_date).toISOString().slice(0, 10);
-                    return (!from || d >= from) && (!to || d <= to);
-                  });
-
-                  if (filtered.length === 0) {
+                  if (rfrRates.length === 0) {
                     return <p style={{ color: "gray", textAlign: "center", margin : "15px" }}>Aucun résultat trouvé.</p>;
                   }
 
-                  return filtered.map((rfr_rate) => (
+                  return rfrRates.rfr_rates.map((rfr_rate) => (
                     <RfrRateRow key={rfr_rate.uuid} rfr_rate={rfr_rate} onSave={handleEditRfrRate} onDelete={handleDeleteRfrRate} />
                   ));
                 })()}

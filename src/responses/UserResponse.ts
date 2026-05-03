@@ -23,5 +23,11 @@ export interface UsersWithDataResponseDto {
   numberOfBanUsers : number,
   numberOfNewMonthlyUsers : number,
   numberOfPaidUsers : number,
+  length : number,
+  users : UserResponse[]
+}
+
+export interface UsersWithLength {
+  length : number,
   users : UserResponse[]
 }

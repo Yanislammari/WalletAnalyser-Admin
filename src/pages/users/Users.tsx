@@ -1,5 +1,5 @@
 import PageLayout from "../../components/Navbar/NavBarPageLayout";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { UsersWithDataResponseDto } from "../../responses/UserResponse";
 import UserService from "../../services/UserService";
 import { toast } from "sonner";
@@ -8,10 +8,10 @@ import type { BanUserPayload } from "../../payloads/UserPayload";
 import { StatCard, UserRow } from "./User_components";
 import ErrorContainer from "../../components/Error";
 import { Pagination } from "../../components/Pagination/Pagination";
-import { pageSize } from "../../constants/pageSize";
 import SearchBar from "../../components/SearchBar/SearchBar";
 import AccordionForm, { type FormProps } from "./AddSuperUser";
 import "../../style/TableTitle.css";
+import { LimitPicker } from "../../components/Pagination/LimitPicker";
 
 const Users: React.FC = () => {
   return (
@@ -30,8 +30,10 @@ const AdminDashboard : React.FC = () => {
   const [pageLoading, setPageLoading] = useState<boolean>(false)
   const [pageError, setPageError] = useState<string | null>(null)
   const [search , setSearch] = useState<string>("")
+  const prevSearch = useRef(search);
   const [ form, setForm] = useState<FormProps>({firstName : "",lastName : "",email : ""})
   const [ formLoading, setFormLoading ] = useState(false);
+  const [limit , setLimit] = useState(0);
 
   const stats = [
     { label: "Total users",     value: data?.numberOfUsers },
@@ -77,6 +79,7 @@ const AdminDashboard : React.FC = () => {
       setLoading(true)
       try{
         const response = await userService.getUsersIntro();
+        setLimit(Math.ceil(response.users.length / 2))
         setData(response)
       }
       catch(error : any){
@@ -89,15 +92,39 @@ const AdminDashboard : React.FC = () => {
     fetchUserInfo()
   },[])
 
+  useEffect(()=>{
+    const fetchOnSearchChange = async() => {
+      if (search == "" && prevSearch.current == "") return;
+      prevSearch.current = search;
+      try {
+        setPageError(null);
+        setPageLoading(true);
+        const response = await userService.getUsersIntroOffset(0, 100, search);
+        setData((prev) => {
+          if (!prev) return prev;
+          return { ...prev, users: response.users, length : response.length};
+        });
+        setCurrentPage(1);
+        setLimit(response.length < 100 ? response.length : 100)
+      } catch (e: any) {
+        toast.error(e.message);
+        setPageError(e.message);
+      } finally {
+        setPageLoading(false);
+      }
+    }
+    fetchOnSearchChange()
+  },[search])
+
   const handleNext = async (direction : number) => {
     try {
       setPageError(null);
       setPageLoading(true);
       const nextPage = currentPage + direction;
-      const response = await userService.getUsersIntroOffset(nextPage * pageSize - pageSize);
+      const response = await userService.getUsersIntroOffset(nextPage * limit - limit, limit, search);
       setData((prev) => {
         if (!prev) return prev;
-        return { ...prev, users: response };
+        return { ...prev, users: response.users, length : response.length};
       });
       setCurrentPage(nextPage);
     } catch (e: any) {
@@ -112,8 +139,11 @@ const AdminDashboard : React.FC = () => {
     try {
       setPageLoading(true);
       setPageError(null);
-      const response = await userService.getUsersIntroOffset(page * pageSize - pageSize);
-      setData((prev) => prev ? { ...prev, users: response } : prev);
+      const response = await userService.getUsersIntroOffset(page * limit - limit, limit, search);
+      setData((prev) => {
+        if (!prev) return prev;
+        return { ...prev, users: response.users, length : response.length};
+      });
       setCurrentPage(page);
     } catch (e: any) {
       toast.error(e.message);
@@ -122,6 +152,25 @@ const AdminDashboard : React.FC = () => {
       setPageLoading(false);
     }
   };
+
+  const handleLimit = async (newLimit: number) => {
+    try {
+      setPageLoading(true);
+      const position = (currentPage - 1) * limit;          // current scroll position (0-based offset)
+      const newPage = Math.floor(position / newLimit) + 1; // which page contains that position
+      const response = await userService.getUsersIntroOffset(newPage * limit - limit ,limit, search);
+      setData((prev) => {
+        if (!prev) return prev;
+        return { ...prev, users: response.users, length : response.length};
+      });
+      setLimit(newLimit);
+      setCurrentPage(newPage);
+    } catch (e: any) {
+      toast.error(e.message);
+    } finally {
+      setPageLoading(false);
+    }
+  }
 
   const handleAddUser = async () => {
     try {
@@ -181,7 +230,8 @@ const AdminDashboard : React.FC = () => {
           <div className="table-header">
             <h2>User management</h2>
             <SearchBar value={search} onChange={(value) => setSearch(value)}/>
-            <Pagination currentPage={currentPage} totalPages={Math.ceil(data.numberOfUsers / pageSize)} onPrev={()=>handleNext(-1)} onNext={()=>handleNext(1)} onGoTo={handleGoTo} disabled={pageLoading} />
+            <LimitPicker limit={limit} total={data.length} onGoTo={handleLimit} />
+            <Pagination currentPage={currentPage} totalPages={Math.ceil(data.length / limit)} onPrev={()=>handleNext(-1)} onNext={()=>handleNext(1)} onGoTo={handleGoTo} disabled={pageLoading} />
           </div>
           {pageLoading ? (
             <Loading fullPage={false} spinnerSize={24} />
@@ -196,9 +246,15 @@ const AdminDashboard : React.FC = () => {
                 </tr>
               </thead>
               <tbody>
-                {data.users.filter(value => value.email.toLowerCase().startsWith(search.toLowerCase())).map((user) => (
-                  <UserRow key={user.id} user={user} onToggle={handleBanToggle} />
-                ))}
+                {(() => {
+                  if (data.length === 0) {
+                    return <p style={{ color: "gray", textAlign: "center", margin : "15px" }}>Aucun résultat trouvé.</p>;
+                  }
+
+                  return data.users.map((user) => (
+                    <UserRow key={user.id} user={user} onToggle={handleBanToggle} />
+                  ))
+                })()}
               </tbody>
             </table> 
           )}

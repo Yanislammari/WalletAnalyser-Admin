@@ -17,8 +17,8 @@ class RfrRatesService extends BaseService {
     return RfrRatesService.instance;
   }
 
-  public async getRfrRates(uuid : string, offset : number, size : number ): Promise<RfrRateMetaData> {
-    return this.request<RfrRateMetaData>(this.base_url_rfr_rates + uuid + `?offset=${offset}&size=${size}`, {
+  public async getRfrRates(uuid : string, offset : number, size : number, from : string, to : string ): Promise<RfrRateMetaData> {
+    return this.request<RfrRateMetaData>(this.base_url_rfr_rates + uuid + `?offset=${offset}&size=${size}&to=${to}&from=${from}`, {
       method: "GET",
     });
   }
