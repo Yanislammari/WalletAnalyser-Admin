@@ -1,4 +1,4 @@
-import type { GetRfrRatePayload, RfrPayload, RfrRateMetaData, RiskFreeRateShort } from "../payloads/RfrRatesPayload";
+import type {RfrPayload, RfrRateMetaData, RiskFreeRateShort } from "../payloads/RfrRatesPayload";
 import { BaseService } from "./BaseService";
 import type { MessageResponse } from "../responses/ErrorResponse";
 

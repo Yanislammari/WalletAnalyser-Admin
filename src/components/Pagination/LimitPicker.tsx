@@ -1,6 +1,8 @@
 import "./Pagination.css"
 import { useEffect, useState } from "react";
 
+const LIMIT_OPTIONS = [25, 50, 100];
+
 interface LimitPickerProps {
   limit: number;
   total: number;
@@ -16,41 +18,50 @@ export const LimitPicker: React.FC<LimitPickerProps> = ({
   disabled,
   accentColor,
 }) => {
-  const [input, setInput] = useState<string>("");
+  const [selected, setSelected] = useState<number>(limit);
+
+  const availableOptions = LIMIT_OPTIONS.filter((opt) => opt <= total);
 
   useEffect(() => {
-    setInput(String(limit));
-  }, [limit]);
-
-  const handleGoTo = () => {
-    const value = parseInt(input);
-    if (!isNaN(value) && value >= 1 && value <= total) {
-      onGoTo(value);
-    } else {
-      setInput(String(limit)); // reset if invalid
+    if (total < LIMIT_OPTIONS[0]) {
+      setSelected(total);
+      return;
     }
+    const closest = availableOptions.reduce((prev, curr) =>
+      Math.abs(curr - limit) < Math.abs(prev - limit) ? curr : prev
+    );
+    setSelected(closest);
+  }, [limit, total]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = parseInt(e.target.value);
+    setSelected(value);
+    onGoTo(value);
   };
 
-  const style = accentColor
-    ? ({ "--pagination-accent": accentColor } as React.CSSProperties)
-    : undefined;
+  const style = accentColor ? ({ "--pagination-accent": accentColor } as React.CSSProperties) : undefined;
 
   return (
-    <div className="pagination" style={style}>
+    <div className="pagination">
       <div className="pagination-info">
-        <input
-          type="number"
+        <select
           className="pagination-input"
-          value={input}
-          min={1}
-          max={total}
-          disabled={disabled}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && handleGoTo()}
-          onBlur={handleGoTo}
-        />
-        <span className="pagination-sep">/</span>
-        <span className="pagination-total">{total} elements</span>
+          value={selected}
+          disabled={disabled || availableOptions.length === 0}
+          onChange={handleChange}
+          style={style}
+        >
+          {availableOptions.length === 0 ? (
+            <option value={total} style={{ color: "black" }}>{total}</option>
+          ) : (
+            availableOptions.map((opt) => (
+              <option key={opt} value={opt} style={{ color: "black" }}>
+                {opt}
+              </option>
+            ))
+          )}
+        </select>
+        <span className="pagination-total" style={{ color: accentColor}}>/ {total} elements</span>
       </div>
     </div>
   );

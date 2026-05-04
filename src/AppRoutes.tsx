@@ -11,6 +11,9 @@ import SectorsAllias from "./pages/sector-allias/Sector_Allias";
 import SettingsPage from "./pages/settings/Reset_Password";
 import RfrCountry from "./pages/rfrCountry/RfrCountry";
 import RfrRates from "./pages/rfrRates/RfrRates";
+import Currencies from "./pages/currencies/Currencies";
+import Forex from "./pages/forex/Forex";
+import ForexRates from "./pages/forexRates/ForexRates";
 
 
 const AppRoutes: React.FC = () => {
@@ -25,6 +28,9 @@ const AppRoutes: React.FC = () => {
         <Route path="/sectors-allias/:sector_uuid" element={<AuthWrapper><SectorsAllias/></AuthWrapper>} />
         <Route path="/rfr" element={<AuthWrapper><RfrCountry/></AuthWrapper>} />
         <Route path="/rfr/:rfr_country_uuid" element={<AuthWrapper><RfrRates/></AuthWrapper>} />
+        <Route path="/currencies" element={<AuthWrapper><Currencies/></AuthWrapper>} />
+        <Route path="/forex" element={<AuthWrapper><Forex/></AuthWrapper>} />
+        <Route path="/forex/:forex_uuid" element={<AuthWrapper><ForexRates/></AuthWrapper>} />
         <Route path="/settings" element={<SettingsPage />} />
     </Routes>
   );

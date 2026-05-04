@@ -5,6 +5,7 @@ import ETFIcon from "@/assets/icon_nav_bar/etf.svg";
 import SectorsIcon from "@/assets/icon_nav_bar/sectors.svg";
 import CountriesIcon from "@/assets/icon_nav_bar/countries.svg";
 import CurrenciesIcon from "@/assets/icon_nav_bar/currencies.svg";
+import ForexIcon from "@/assets/icon_nav_bar/forex.svg"
 import RFRIcon from "@/assets/icon_nav_bar/rfr.svg";
 import SettingsIcon from "@/assets/icon_nav_bar/settings.svg";
 
@@ -21,6 +22,7 @@ const menuItems: MenuItem[] = [
   { icon: SectorsIcon, path: '/sectors', label: 'Sectors' },
   { icon: CountriesIcon, path: '/countries', label: 'Countries' },
   { icon: CurrenciesIcon, path: '/currencies', label: 'Currencies' },
+  { icon: ForexIcon, path: '/forex', label: 'Forex' },
   { icon: RFRIcon, path: '/rfr', label: 'RiskFreeRate' },
   { icon: SettingsIcon, path: '/settings', label: 'Settings' },
 ];

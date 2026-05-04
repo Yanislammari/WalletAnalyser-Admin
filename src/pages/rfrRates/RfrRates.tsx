@@ -54,7 +54,7 @@ const RfrRatesDashboard : React.FC = () => {
         setPageLoading(true);
         setCurrentPage(1);
         const response = await rfrRatesService.getRfrRates(rfr_country_uuid, 0, 100, from, to);
-        setLimit(response.length < 100 ? response.length : 100)
+        setLimit(response.length < 100 ? response.length < 50 ? 25 : 50 : 100);
         setRfrRates(response);
       } catch (error: any) {
         toast.error(error.message);
@@ -180,6 +180,7 @@ const RfrRatesDashboard : React.FC = () => {
           return {
             ...prev,
             rfr_rates: updated,
+            length : prev.length - 1
           };
         });
         toast.success(`RFR rate deleted successfully`)
