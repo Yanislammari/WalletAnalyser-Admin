@@ -17,9 +17,15 @@ export interface ForexListMetaData {
 
 export interface PostForexPayload {
   file: File;
+  base_currency_uuid : string
 }
 
 export interface PatchForexPayload {
   quote_currency_uuid: string;
   base_currency_uuid: string;
+}
+
+export interface ForexListMessage {
+  forex_list: ForexMetaData[];
+  message : string
 }

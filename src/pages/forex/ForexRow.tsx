@@ -10,14 +10,16 @@ interface EditToggleProps {
   onSave: (baseCurrency: string, quoteCurrency: string) => void;
   onDelete: () => void;
   options: CurrencyNameResponse[];
+  editing : boolean
+  setEditing : React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-function EditToggle({ value, onSave, onDelete, options }: EditToggleProps) {
+function EditToggle({ value, onSave, onDelete, options, editing, setEditing }: EditToggleProps) {
   const selectOptions = useMemo(
     () => toSelectOptions(options, (c) => c.uuid, (c) => c.currency_name),
     [options]
   );
-  const [editing, setEditing] = useState(false);
+
   const [loading, setLoading] = useState(false);
   const [baseCurrency, setBaseCurrency] = useState(value.forex.baseCurrency.uuid);
   const [quoteCurrency, setQuoteCurrency] = useState(value.forex.quoteCurrency.uuid); 
@@ -143,13 +145,20 @@ export interface ForexRowProps {
 }
 
 export function ForexRow({ forexItem, onSave, onDelete, options, onClick }: ForexRowProps) {
+  const [editing, setEditing] = useState(false)
   return (
-    <tr onClick={() => onClick?.()} style={{ cursor: onClick ? "pointer" : "default" }}>
+    <tr onClick={() => {
+      if(!editing){
+        onClick?.()
+      }
+    }} style={{ cursor: onClick ? "pointer" : "default" }}>
       <EditToggle
         value={forexItem}
         onSave={(baseCurrency, quoteCurrency) => onSave?.(forexItem.forex.uuid, baseCurrency, quoteCurrency)}
         onDelete={() => onDelete?.(forexItem.forex.uuid)}
         options={options}
+        editing={editing}
+        setEditing={setEditing}
       />
     </tr>
   );

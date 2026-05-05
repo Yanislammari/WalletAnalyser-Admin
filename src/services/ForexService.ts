@@ -1,5 +1,5 @@
 import { BaseService } from "./BaseService";
-import type { ForexListMetaData, ForexMetaData, PatchForexPayload, PostForexPayload } from "../payloads/ForexPayload";
+import type { ForexListMessage, ForexListMetaData, ForexMetaData, PatchForexPayload, PostForexPayload } from "../payloads/ForexPayload";
 
 class ForexService extends BaseService {
   private static instance: ForexService;
@@ -20,11 +20,12 @@ class ForexService extends BaseService {
     return this.request<ForexListMetaData>(this.base_url_forex, { method: "GET" });
   }
 
-  public async postForex(payload: PostForexPayload): Promise<ForexListMetaData> {
+  public async postForex(payload: PostForexPayload): Promise<ForexListMessage> {
     const formData = new FormData();
     formData.append("file", payload.file);
+    formData.append("base_currency_uuid", payload.base_currency_uuid)
 
-    return this.request<ForexListMetaData>(this.base_url_forex, {
+    return this.request<ForexListMessage>(this.base_url_forex, {
       method: "POST",
       body: formData,
     }, true);

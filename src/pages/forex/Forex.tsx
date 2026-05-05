@@ -28,8 +28,8 @@ const ForexDashboard: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
   const [search, setSearch] = useState("");
-  const [form, setForm] = useState<FormProps>({ file: null });
-  const [formLoading] = useState(false);
+  const [form, setForm] = useState<FormProps>({ file: null, base_currency_uuid : "" });
+  const [formLoading, setFormLoading] = useState(false);
 
   useEffect(() => {
     const fetchForexItems = async () => {
@@ -53,25 +53,29 @@ const ForexDashboard: React.FC = () => {
   }, [forexService]);
 
   const handleAddForex = async () => {
-    /**try {
-      if (!form.file) {
-        toast.error("Please choose an Excel file before sending.");
-        return;
+    const { file, base_currency_uuid } = form;
+    if (!file || base_currency_uuid === "") {
+      toast.error("All fields required");
+      return;
+    }
+
+    toast.promise(
+      forexService.postForex({ file, base_currency_uuid }),
+      {
+        loading: "Uploading forex data...",
+        success: async (response) => {
+          const newData = await forexService.getForexItems()
+          setForexItems(newData.forex_list)
+          return (
+            <span style={{ whiteSpace: "pre-line" }}>{response.message}</span>
+          );
+        },
+        error: (e) =>
+          e?.name === "TypeError"
+            ? "File upload was interrupted. Please reselect the file."
+            : e.message,
       }
-      setFormLoading(true);
-      const response = await forexService.postForex({ file: form.file });
-      setForexItems(response.forex_items);
-      setForm({ file: null });
-      toast.success("Forex data imported successfully.");
-    } catch (e: any) {
-      if (e?.name === "TypeError") {
-        toast.error("File upload was interrupted. Please reselect the file.");
-        return;
-      }
-      toast.error(e.message);
-    } finally {
-      setFormLoading(false);
-    }**/
+    );
   };
 
   const handleEditForex = async (uuid: string, base_currency_uuid: string, quote_currency_uuid: string) => {
@@ -121,7 +125,7 @@ const ForexDashboard: React.FC = () => {
       <div className="dash-wrap">
         <p className="dash-title">Forex Dashboard</p>
 
-        <AddForexForm handleSend={handleAddForex} loading={formLoading} form={form} setForm={setForm} />
+        <AddForexForm handleSend={handleAddForex} loading={formLoading} form={form} setForm={setForm} currencies={currencies ?? []} />
 
         <div className="table-wrap">
           <div className="table-header">
