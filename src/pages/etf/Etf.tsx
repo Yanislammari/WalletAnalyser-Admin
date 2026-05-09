@@ -6,33 +6,27 @@ import ErrorContainer from "../../components/Error";
 import SearchBar from "../../components/SearchBar/SearchBar";
 import AssetsService from "../../services/AssetsService";
 import { AssetType, type AssetPatch, type MetaDataAssets, type MetaDataAssetShort } from "../../payloads/AssetPayload";
-import AddAssetForm from "./AddAsset";
-import { AssetRow } from "./AssetRow";
-import type { SectorNameResponse } from "../../payloads/SectorPayload";
-import type { CountryNameResponse } from "../../payloads/CountryPayload";
+import { AssetRow } from "../assets/AssetRow";
 import type { CurrencyNameResponse } from "../../payloads/CurrencyPayload";
-import SectorsService from "../../services/SectorsService";
-import CountriesService from "../../services/CountriesService";
 import CurrenciesService from "../../services/CurrenciesService";
 import { useNavigate } from "react-router-dom";
 import { Pagination } from "../../components/Pagination/Pagination";
 import { LimitPicker } from "../../components/Pagination/LimitPicker";
+import AddAssetForm from "../assets/AddAsset";
 
 const Assets: React.FC = () => {
   return (
     <PageLayout>
-      <AssetsDashboard />
+      <EtfDashboard />
     </PageLayout>
   );
 };
 
-const AssetsDashboard: React.FC = () => {
-  const assetType = AssetType.STOCKS
+const EtfDashboard: React.FC = () => {
+  const etfType = AssetType.ETF
   const navigate = useNavigate();
   const assetsService = AssetsService.getInstance();
   const [assets, setAssets] = useState<MetaDataAssets | null>(null);
-  const [sectors, setSectors] = useState<SectorNameResponse[] | null>(null);
-  const [countries, setCountries] = useState<CountryNameResponse[] | null>(null);
   const [currencies, setCurrencies] = useState<CurrencyNameResponse[] | null>(null);
   const [loading, setLoading] = useState(false);
   const [pageLoading, setPageLoading] = useState(false);
@@ -40,20 +34,16 @@ const AssetsDashboard: React.FC = () => {
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [limit, setLimit] = useState(25);
-  const [form, setForm] = useState<AssetPatch>({country_uuid : null, base_currency_uuid : null, sector_uuid : null, ticker_name : "", type : assetType, official_name : ""});
+  const [form, setForm] = useState<AssetPatch>({country_uuid : null, base_currency_uuid : null, sector_uuid : null, ticker_name : "", type : etfType, official_name : ""});
   const [formLoading, setFormLoading] = useState(false);
 
   useEffect(()=>{
     const fetchOthers = async () => {
       setLoading(true);
       try {
-        const [sectorsResponse, countriesResponse, currenciesResponse] = await Promise.all([
-          SectorsService.getInstance().getSectors(),
-          CountriesService.getInstance().getCountries(),
+        const [ currenciesResponse ] = await Promise.all([
           CurrenciesService.getInstance().getCurrencies(),
         ]);
-        setSectors(sectorsResponse.sectors);
-        setCountries(countriesResponse.countries);
         setCurrencies(currenciesResponse.currencies);
       } catch (error: any) {
         setHasError(true);
@@ -74,7 +64,7 @@ const AssetsDashboard: React.FC = () => {
         } else {
           setPageLoading(true)
         }
-        const response = await assetsService.getAssets(assetType, search, limit, (currentPage-1) * limit)
+        const response = await assetsService.getAssets(etfType, search, limit, (currentPage-1) * limit)
         setAssets(response);
       } catch (error: any) {
         setHasError(true);
@@ -109,14 +99,13 @@ const AssetsDashboard: React.FC = () => {
 
   const handleAddAsset = async () => {
     try {
-      if( form.base_currency_uuid == null || form.country_uuid == null || form.sector_uuid == null || form.official_name == "" || form.ticker_name == "") {
+      if( form.base_currency_uuid == null || form.official_name == "" || form.ticker_name == "") {
         toast.error("All fields are required")
         return
       }
-      const exist = assets?.assets.find((value)=>value.asset.ticker_name.toLowerCase() == form.ticker_name.toLowerCase() 
-        || value.asset.official_name.toLowerCase() == form.official_name.toLowerCase())
+      const exist = assets?.assets.find((value)=>value.asset.ticker_name.toLowerCase() == form.ticker_name.toLowerCase() || value.asset.official_name.toLowerCase() == form.official_name.toLowerCase())
       if(exist) {
-        toast.error("An asset already exist")
+        toast.error("An etf already exist")
         return
       }
       setFormLoading(true)
@@ -162,14 +151,14 @@ const AssetsDashboard: React.FC = () => {
   return (
     <>
       <div className="dash-wrap">
-        <p className="dash-title">Assets Dashboard</p>
+        <p className="dash-title">ETF Dashboard</p>
 
-        <AddAssetForm handleSend={handleAddAsset} loading={formLoading} form={form} setForm={setForm} 
-          currencies={currencies ?? []} sectors={sectors ?? []} countries={countries ?? []} type={assetType} />
+        <AddAssetForm handleSend={handleAddAsset} loading={formLoading} form={form} setForm={setForm} currencies={currencies ?? []} sectors={[]} countries={[]} 
+          type={etfType} title="Add a new etf"/>
 
         <div className="table-wrap">
           <div className="table-header">
-            <h2>Assets management</h2>
+            <h2>ETF management</h2>
             <SearchBar value={search} onChange={(value) => setSearch(value)} />
             <LimitPicker limit={limit} total={assets.length} onGoTo={handleLimitChange} />
             <Pagination currentPage={currentPage} totalPages={Math.ceil(assets!.length / limit)} onPrev={handlePrev} onNext={handleNext} onGoTo={handlePageChange} disabled={pageLoading}/>
@@ -177,33 +166,24 @@ const AssetsDashboard: React.FC = () => {
 
           <table style={{ overflow: "visible" }}>
             <colgroup>
-              <col style={{ width: "20%" }} />
-              <col style={{ width: "10%" }} />
-              <col style={{ width: "15%" }} />
-              <col style={{ width: "15%" }} />
-              <col style={{ width: "15%" }} />
-              <col style={{ width: "15%" }} />
+              <col style={{ width: "28%" }} />
+              <col style={{ width: "28%" }} />
+              <col style={{ width: "28%" }} />
+              <col/>
             </colgroup>
             <thead>
               <tr>
                 <th>Name</th>
                 <th>Symbol</th>
-                <th>Sector</th>
-                <th>Country</th>
                 <th>Currency</th>
                 <th>Last update</th>
               </tr>
             </thead>
             <tbody>
               {assets.assets.map((item) => (
-                <AssetRow
-                  key={item.asset.uuid}
-                  value={item}
-                  sectors={sectors ?? []}
-                  countries={countries ?? []}
-                  currencies={currencies ?? []}
-                  onClick={() => navigate(`/assets/${item.asset.uuid}`)}
-                  type={assetType}
+                <AssetRow key={item.asset.uuid} value={item}
+                  sectors={[]} countries={[]} currencies={currencies ?? []}
+                  onClick={() => navigate(`/etf/${item.asset.uuid}`)} type={etfType}
                 />
               ))}
               {assets.length === 0 && (

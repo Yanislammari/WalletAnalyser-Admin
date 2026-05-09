@@ -3,16 +3,18 @@ import { toSelectOptions } from "../../components/SelectSearch/SelectSearchable"
 import type { SectorNameResponse } from "../../payloads/SectorPayload";
 import type { CountryNameResponse } from "../../payloads/CountryPayload";
 import type { CurrencyNameResponse } from "../../payloads/CurrencyPayload";
-import type { MetaDataAssetShort } from "../../payloads/AssetPayload";
+import { AssetType, type MetaDataAssetShort } from "../../payloads/AssetPayload";
 
-interface EditToggleProps {
+interface AssetRowProps {
   value: MetaDataAssetShort;
   sectors: SectorNameResponse[];
   countries: CountryNameResponse[];
   currencies : CurrencyNameResponse[];
+  onClick?: () => void;
+  type : AssetType
 }
 
-function EditToggle( props :  EditToggleProps) {
+export function AssetRow( props :  AssetRowProps) {
   const sectorOptions = useMemo(
     () => toSelectOptions(props.sectors, (s) => s.uuid, (s) => s.sector_name),
     [props.sectors]
@@ -33,40 +35,37 @@ function EditToggle( props :  EditToggleProps) {
   const selectedCurrency = currenciesOptions.find((value) => value.uuid === props.value.asset.base_currency_uuid)?.label ?? ""
 
   return (
-    <>
-      <td>{props.value.asset.official_name}</td>
-      <td>{props.value.asset.ticker_name}</td>
-      <td>{selectedSector}</td>
-      <td>{selectedCountry}</td>
-      <td>{selectedCurrency}</td>
-      <td>
-        {props.value.last_update
-          ? new Date(props.value.last_update).toLocaleDateString("fr-FR")
-          : "No date"}
-      </td>
-    </>
-  );
-}
-
-export interface AssetRowProps {
-  asset: MetaDataAssetShort;
-  sectors: SectorNameResponse[];
-  countries: CountryNameResponse[];
-  currencies : CurrencyNameResponse[];
-  onClick?: () => void;
-}
-
-export function AssetRow({ asset, sectors, countries, currencies, onClick }: AssetRowProps) {
-  return (
     <tr onClick={() => {
-        onClick?.();
+        props.onClick?.();
     }} style={{ cursor: "pointer"}}>
-      <EditToggle
-        value={asset}
-        sectors={sectors}
-        countries={countries}
-        currencies={currencies}
-      />
+      { props.type == AssetType.STOCKS && (
+        <>
+        <td>{props.value.asset.official_name}</td>
+        <td>{props.value.asset.ticker_name}</td>
+        <td>{selectedSector}</td>
+        <td>{selectedCountry}</td>
+        <td>{selectedCurrency}</td>
+        <td>
+          {props.value.last_update
+            ? new Date(props.value.last_update).toLocaleDateString("fr-FR")
+            : "No date"}
+        </td>
+        </>
+      )}
+      { props.type == AssetType.ETF && (
+        <>
+        <td>{props.value.asset.official_name}</td>
+        <td>{props.value.asset.ticker_name}</td>
+        <td>{selectedCurrency}</td>
+        <td>
+          {props.value.last_update
+            ? new Date(props.value.last_update).toLocaleDateString("fr-FR")
+            : "No date"}
+        </td>
+        </>
+      )
+        
+      }
     </tr>
   );
 }

@@ -15,6 +15,8 @@ import Currencies from "./pages/currencies/Currencies";
 import Forex from "./pages/forex/Forex";
 import ForexRates from "./pages/forexRates/ForexRates";
 import AssetPrices from "./pages/assetPrices/AssetPrices";
+import Etf from "./pages/etf/Etf";
+import { AssetType } from "./payloads/AssetPayload";
 
 const AppRoutes: React.FC = () => {
   return (
@@ -22,7 +24,9 @@ const AppRoutes: React.FC = () => {
       <Route path="/" element={<Login />} />
         <Route path="/users" element={<AuthWrapper><Users /></AuthWrapper>} />
         <Route path="/assets" element={<AuthWrapper><Assets /></AuthWrapper>} />
-        <Route path="/assets/:asset_uuid" element={<AuthWrapper><AssetPrices/></AuthWrapper>} />
+        <Route path="/assets/:asset_uuid" element={<AuthWrapper><AssetPrices type={AssetType.STOCKS}/></AuthWrapper>} />
+        <Route path="/etf" element={<AuthWrapper><Etf/></AuthWrapper>} />
+        <Route path="/etf/:asset_uuid" element={<AuthWrapper><AssetPrices type={AssetType.ETF}/></AuthWrapper>} />
         <Route path="/countries" element={<AuthWrapper><Countries/></AuthWrapper>} />
         <Route path="/countries-allias/:country_uuid" element={<AuthWrapper><CountriesAllias/></AuthWrapper>} />
         <Route path="/sectors" element={<AuthWrapper><Sectors/></AuthWrapper>} />

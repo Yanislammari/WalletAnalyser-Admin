@@ -22,18 +22,21 @@ import type { SectorNameResponse } from "../../payloads/SectorPayload";
 import AddAssetForm from "../assets/AddAsset";
 import { AssetType, type AssetPatch } from "../../payloads/AssetPayload";
 import AssetsService from "../../services/AssetsService";
-import DeleteAsset from "./ButtonAsset";
 import ButtonForm from "./ButtonAsset";
 
-const AssetPrices: React.FC = () => {
+interface AssetPriceProps {
+  type : AssetType
+}
+
+const AssetPrices: React.FC<AssetPriceProps> = (props : AssetPriceProps) => {
   return (
     <PageLayout>
-      <AssetPricesDashboard />
+      <AssetPricesDashboard type={props.type}/>
     </PageLayout>
   );
 };
 
-const AssetPricesDashboard: React.FC = () => {
+const AssetPricesDashboard: React.FC<AssetPriceProps> = (props : AssetPriceProps) => {
   const assetPricesService = AssetPricesService.getInstance();
   const navigate = useNavigate();
   const { asset_uuid } = useParams();
@@ -48,7 +51,7 @@ const AssetPricesDashboard: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [limit, setLimit] = useState(100);
   const [pageLoading, setPageLoading] = useState(false);
-  const [patchForm, setPatchForm] = useState<AssetPatch>({country_uuid : null, base_currency_uuid : null, sector_uuid : null, ticker_name : "", type : AssetType.STOCKS, official_name : ""});
+  const [patchForm, setPatchForm] = useState<AssetPatch>({country_uuid : null, base_currency_uuid : null, sector_uuid : null, ticker_name : "", type : props.type, official_name : ""});
   const [to, setTo] = useState("");
   const [from, setFrom] = useState("");
 
@@ -91,7 +94,7 @@ const AssetPricesDashboard: React.FC = () => {
         setPageLoading(true);
         setCurrentPage(1);
         const response = await assetPricesService.getAssetPrices(asset_uuid, 0, 100, from, to);
-        setPatchForm({...response.asset, type : AssetType.STOCKS})
+        setPatchForm({...response.asset, type : props.type})
         setLimit(response.length < 100 ? (response.length < 50 ? 25 : 50) : 100);
         setAssetPrices(response);
       } catch (error: any) {
@@ -227,10 +230,18 @@ const AssetPricesDashboard: React.FC = () => {
 
   const handleEditAsset = async () => {
     try {
-      if( patchForm.base_currency_uuid == null || patchForm.country_uuid == null || patchForm.sector_uuid == null || patchForm.official_name == "" || patchForm.ticker_name == "") {
-        toast.error("All fields are required")
-        return
+      if(props.type == AssetType.STOCKS) {
+        if( patchForm.base_currency_uuid == null || patchForm.country_uuid == null || patchForm.sector_uuid == null || patchForm.official_name == "" || patchForm.ticker_name == "") {
+          toast.error("All fields are required")
+          return
+        }
+      } else {
+        if( patchForm.base_currency_uuid == null || patchForm.official_name == "" || patchForm.ticker_name == "") {
+          toast.error("All fields are required")
+          return
+        }
       }
+
       setFormLoading(true)
       const response = await AssetsService.getInstance().patchAsset(patchForm, asset_uuid!)
       setAssetPrices((prev)=>{
@@ -250,7 +261,8 @@ const AssetPricesDashboard: React.FC = () => {
       setFormLoading(true)
       await AssetsService.getInstance().delete(asset_uuid!);
       toast.success("Asset deleted successfully.");
-      navigate("/assets", { replace : true })
+      const to = props.type == AssetType.STOCKS ? "/assets" : "/etf"
+      navigate(to, { replace : true })
     } catch (e: any) {
       toast.error(e.message);
     } finally {
@@ -269,7 +281,9 @@ const AssetPricesDashboard: React.FC = () => {
             <span style={{ whiteSpace: "pre-line" }}>{response.message}</span>
           );
         },
-        error: (e) => e?.name === e.message,
+        error: (e) => {
+          return e.message
+        },
       }
     );
   };
@@ -285,11 +299,13 @@ const AssetPricesDashboard: React.FC = () => {
   return (
     <>
       <div className="dash-wrap">
-        <Title title={`Asset Price management : ${assetPrices.asset.official_name} (${assetPrices.asset.ticker_name})`} />
+        <Title title={`${props.type.toUpperCase()} Price management : ${assetPrices.asset.official_name} (${assetPrices.asset.ticker_name})`} />
         <AddAssetForm form={patchForm} setForm={setPatchForm} handleSend={handleEditAsset} loading={formLoading} 
-          currencies={ currencies ?? [] } countries={ countries ?? [] } sectors={ sectors ?? [] } title={"Modify this stock"}/>
-        <ButtonForm handleSend={handleDeleteAsset} loading={formLoading} title="Delete the stock" buttonName="Delete the stock" titleDialog="Delete the stock" textDialog="This will delete a stock and all his prices, this cannot be undone"/>
-        <ButtonForm handleSend={updateStockPrice} loading={formLoading} title="Update stock price" buttonName="Get all prices" titleDialog="Fetch all prices from api" textDialog="This will fetch all prices from the external API. This can take quite some times and is hard to undone."/>
+          currencies={ currencies ?? [] } countries={ countries ?? [] } sectors={ sectors ?? [] } title={`Modify this ${props.type}`} type={props.type} />
+        <ButtonForm handleSend={handleDeleteAsset} loading={formLoading} 
+          title={`Delete the ${props.type}`} buttonName={`Delete the ${props.type}`} titleDialog={`Delete the ${props.type}`} textDialog={`This will delete a ${props.type} and all his prices, this cannot be undone`}/>
+        <ButtonForm handleSend={updateStockPrice} loading={formLoading} 
+          title={`Update the ${props.type} price`} buttonName="Get all prices" titleDialog="Fetch all prices from api" textDialog="This will fetch all prices from the external API. This can take quite some times and is hard to undone."/>
         <AddAssetPricesForm form={form} setForm={setForm} handleSend={handleAddAssetPrice} loading={formLoading} />
 
         <div className="table-wrap">

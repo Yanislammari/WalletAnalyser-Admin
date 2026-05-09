@@ -1,5 +1,5 @@
 import { BaseService } from "./BaseService";
-import { AssetType, type AssetDatabaseModel, type AssetPatch, type AssetShort, type MetaDataAssets, type MetaDataAssetShort } from "../payloads/AssetPayload";
+import { AssetType, type AssetDatabaseModel, type AssetShort, type MetaDataAssets } from "../payloads/AssetPayload";
 import type { MessageResponse } from "../responses/ErrorResponse";
 
 class AssetsService extends BaseService {
@@ -13,8 +13,8 @@ class AssetsService extends BaseService {
     return AssetsService.instance;
   }
 
-  public async getAssets(search : string, limit : number, offset : number): Promise<MetaDataAssets> {
-    return this.request<MetaDataAssets>(this.base_url_assets + `?search=${search}&limit=${limit}&offset=${offset}&type=${AssetType.STOCKS}`, { method: "GET" });
+  public async getAssets(type : AssetType, search : string, limit : number, offset : number): Promise<MetaDataAssets> {
+    return this.request<MetaDataAssets>(this.base_url_assets + `?search=${search}&limit=${limit}&offset=${offset}&type=${type}`, { method: "GET" });
   }
 
   public async postAsset(payload: AssetDatabaseModel): Promise<AssetShort> {

@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { ConfirmDialog } from "../../components/Confirm/Confirm";
 import Loading from "../../components/Loading";
-import type { AssetPatch } from "../../payloads/AssetPayload";
+import { AssetType, type AssetPatch } from "../../payloads/AssetPayload";
 import type { CountryNameResponse } from "../../payloads/CountryPayload";
 import type { CurrencyNameResponse } from "../../payloads/CurrencyPayload";
 import type { SectorNameResponse } from "../../payloads/SectorPayload";
@@ -16,9 +16,10 @@ interface AddAssetFormProps {
   countries : CountryNameResponse[];
   sectors : SectorNameResponse[];
   title? : string
+  type : AssetType
 }
 
-export default function AddAssetForm({ handleSend, form, setForm, loading, currencies, countries, sectors, title="Add a new stock" }: AddAssetFormProps) {
+export default function AddAssetForm({ handleSend, form, setForm, loading, currencies, countries, sectors, title=`Add a new stock`, type }: AddAssetFormProps) {
   const [open, setOpen] = useState(false);
 
   const styleForAllSelect : React.CSSProperties = {
@@ -90,36 +91,36 @@ export default function AddAssetForm({ handleSend, form, setForm, loading, curre
             </div>
           </div>
 
-          <div className="accordion-name-row">
-            <div className="accordion-field">
-              <label className="accordion-label">Sectors</label>
-              <div style={styleForAllSelect}>
-                <SelectSearchable
-                  value={ form.sector_uuid ?? ""}
-                  options={ sectorOptions }
-                  onChange={(uuid) => {
-                    setForm((f) => ({ ...f, sector_uuid : uuid }))
-                  }}
-                />
+          { type == AssetType.STOCKS && (
+            <div className="accordion-name-row">
+              <div className="accordion-field">
+                <label className="accordion-label">Sectors</label>
+                <div style={styleForAllSelect}>
+                  <SelectSearchable
+                    value={ form.sector_uuid ?? ""}
+                    options={ sectorOptions }
+                    onChange={(uuid) => {
+                      setForm((f) => ({ ...f, sector_uuid : uuid }))
+                    }}
+                  />
+                </div>
+              </div>
+              <div className="accordion-field">
+                <label className="accordion-label">Country</label>
+                <div style={styleForAllSelect}>
+                  <SelectSearchable
+                    value={ form.country_uuid ?? "" }
+                    options={ countryOptions }
+                    onChange={(uuid) => {
+                      setForm((f) => (
+                        { ...f, country_uuid : uuid }
+                      ))
+                    }}
+                  />
+                </div>
               </div>
             </div>
-            <div className="accordion-field">
-              <label className="accordion-label">Country</label>
-              <div style={styleForAllSelect}>
-                <SelectSearchable
-                  value={ form.country_uuid ?? "" }
-                  options={ countryOptions }
-                  onChange={(uuid) => {
-                    setForm((f) => (
-                      { ...f, country_uuid : uuid }
-                    ))
-                    console.log(uuid)
-                    console.log(countryOptions.find((value) => value.uuid === form.country_uuid)?.label ?? "")
-                  }}
-                />
-              </div>
-            </div>
-          </div>
+          )}
 
           <div className="accordion-name-row">
             <div className="accordion-field">
@@ -148,8 +149,8 @@ export default function AddAssetForm({ handleSend, form, setForm, loading, curre
           {/* Send button */}
           <div style={{marginTop : "25px"}}>
           <ConfirmDialog
-            title="Add / Modify a stock"
-            description="This will create / modify a stock you can stil delete it at any time"
+            title={`Add / Modify ${type}`}
+            description={`This will create / modify a ${type}, you can stil delete it at any time`}
             confirmLabel= "Confirm"
             cancelLabel="Cancel"
             variant="danger"
