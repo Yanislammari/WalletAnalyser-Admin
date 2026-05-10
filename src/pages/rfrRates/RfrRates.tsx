@@ -192,15 +192,15 @@ const RfrRatesDashboard : React.FC = () => {
     }
   }
 
-  if (loading) {
+  if (hasError) {
     return (
-      <Loading />
+      <ErrorContainer errorMessage={"An error occurred, try again later"} />
     );
   }
 
-  if(rfrRates == null || hasError ) {
+  if (loading || rfrRates == null) {
     return (
-      <ErrorContainer errorMessage={"An error occured, try again later"} />
+      <Loading />
     );
   }
 

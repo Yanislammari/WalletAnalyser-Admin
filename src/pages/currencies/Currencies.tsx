@@ -98,12 +98,12 @@ const CurrenciesDashboard: React.FC = () => {
     }
   };
 
-  if (loading) {
-    return <Loading />;
+  if (hasError) {
+    return <ErrorContainer errorMessage={"An error occurred, try again later"} />;
   }
 
-  if (currencies == null || hasError) {
-    return <ErrorContainer errorMessage={"An error occured, try again later"} />;
+  if (loading || currencies == null) {
+    return <Loading />;
   }
 
   return (

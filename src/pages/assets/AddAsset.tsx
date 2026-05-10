@@ -27,20 +27,20 @@ export default function AddAssetForm({ handleSend, form, setForm, loading, curre
     marginTop : "5px",
   }
 
-    const sectorOptions = useMemo(
-      () => toSelectOptions(sectors, (s) => s.uuid, (s) => s.sector_name),
-      [sectors]
-    );
-  
-    const countryOptions = useMemo(
-      () => toSelectOptions(countries, (c) => c.uuid, (c) => c.country_name),
-      [countries]
-    );
-  
-    const currenciesOptions = useMemo(
-      () => toSelectOptions(currencies, (s) => s.uuid, (s) => s.currency_name),
-      [currencies]
-    );
+  const sectorOptions = useMemo(
+    () => toSelectOptions(sectors, (s) => s.uuid, (s) => s.sector_name),
+    [sectors]
+  );
+
+  const countryOptions = useMemo(
+    () => toSelectOptions(countries, (c) => c.uuid, (c) => c.country_name),
+    [countries]
+  );
+
+  const currenciesOptions = useMemo(
+    () => toSelectOptions(currencies, (s) => s.uuid, (s) => s.currency_name),
+    [currencies]
+  );
 
   return (
     <div className="accordion-wrapper">

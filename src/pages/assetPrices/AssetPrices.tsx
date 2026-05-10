@@ -288,12 +288,12 @@ const AssetPricesDashboard: React.FC<AssetPriceProps> = (props : AssetPriceProps
     );
   };
 
-  if (loading) {
-    return <Loading />;
+  if (hasError) {
+    return <ErrorContainer errorMessage={"An error occurred, try again later"} />;
   }
 
-  if (assetPrices == null || hasError) {
-    return <ErrorContainer errorMessage={"An error occured, try again later"} />;
+  if (loading || assetPrices == null) {
+    return <Loading />;
   }
 
   return (

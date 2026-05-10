@@ -140,12 +140,12 @@ const EtfDashboard: React.FC = () => {
     }
   };
 
-  if (loading) {
-    return <Loading />;
+  if (hasError) {
+    return <ErrorContainer errorMessage={"An error occurred, try again later"} />;
   }
 
-  if (assets == null || hasError) {
-    return <ErrorContainer errorMessage={"An error occurred, try again later"} />;
+  if (loading || assets == null) {
+    return <Loading />;
   }
 
   return (
@@ -166,9 +166,10 @@ const EtfDashboard: React.FC = () => {
 
           <table style={{ overflow: "visible" }}>
             <colgroup>
-              <col style={{ width: "28%" }} />
-              <col style={{ width: "28%" }} />
-              <col style={{ width: "28%" }} />
+              <col style={{ width: "20%" }} />
+              <col style={{ width: "20%" }} />
+              <col style={{ width: "20%" }} />
+              <col style={{ width: "20%" }} />
               <col/>
             </colgroup>
             <thead>
@@ -177,6 +178,7 @@ const EtfDashboard: React.FC = () => {
                 <th>Symbol</th>
                 <th>Currency</th>
                 <th>Last update</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -188,7 +190,7 @@ const EtfDashboard: React.FC = () => {
               ))}
               {assets.length === 0 && (
                 <tr>
-                  <td colSpan={7} style={{ color: "gray", textAlign: "center", padding: "15px" }}>
+                  <td colSpan={5} style={{ color: "gray", textAlign: "center", padding: "15px" }}>
                     No results found.
                   </td>
                 </tr>

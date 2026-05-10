@@ -202,15 +202,15 @@ const AdminDashboard : React.FC = () => {
     }
   }
 
-  if (loading) {
+  if (hasError) {
     return (
-      <Loading />
+      <ErrorContainer errorMessage={"An error occurred, try again later"} />
     );
   }
 
-  if(data == null || hasError ) {
+  if (loading || data == null) {
     return (
-      <ErrorContainer errorMessage={"An error occured, try again later"} />
+      <Loading />
     );
   }
 

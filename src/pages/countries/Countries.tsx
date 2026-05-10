@@ -105,15 +105,15 @@ const CountriesDashboard : React.FC = () => {
     }
   }
 
-  if (loading) {
+  if (hasError) {
     return (
-      <Loading />
+      <ErrorContainer errorMessage={"An error occurred, try again later"} />
     );
   }
 
-  if(countries == null || hasError ) {
+  if (loading || countries == null) {
     return (
-      <ErrorContainer errorMessage={"An error occured, try again later"} />
+      <Loading />
     );
   }
 

@@ -4,6 +4,7 @@ import type { SectorNameResponse } from "../../payloads/SectorPayload";
 import type { CountryNameResponse } from "../../payloads/CountryPayload";
 import type { CurrencyNameResponse } from "../../payloads/CurrencyPayload";
 import { AssetType, type MetaDataAssetShort } from "../../payloads/AssetPayload";
+import { useNavigate } from "react-router-dom";
 
 interface AssetRowProps {
   value: MetaDataAssetShort;
@@ -15,6 +16,7 @@ interface AssetRowProps {
 }
 
 export function AssetRow( props :  AssetRowProps) {
+  const navigate = useNavigate();
   const sectorOptions = useMemo(
     () => toSelectOptions(props.sectors, (s) => s.uuid, (s) => s.sector_name),
     [props.sectors]
@@ -62,9 +64,20 @@ export function AssetRow( props :  AssetRowProps) {
             ? new Date(props.value.last_update).toLocaleDateString("fr-FR")
             : "No date"}
         </td>
+        <td>
+          <button
+            className="edit-btn"
+            onClick={(e) => {
+              e.stopPropagation();
+              navigate(`/etf/${props.value.asset.uuid}/concentration`);
+            }}
+            title="View Concentration"
+          >
+            Concentration
+          </button>
+        </td>
         </>
       )
-        
       }
     </tr>
   );

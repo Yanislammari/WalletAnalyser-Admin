@@ -151,12 +151,12 @@ const AssetsDashboard: React.FC = () => {
     }
   };
 
-  if (loading) {
-    return <Loading />;
+  if ( hasError ) {
+    return <ErrorContainer errorMessage={"An error occurred, try again later"} />;
   }
 
-  if (assets == null || hasError) {
-    return <ErrorContainer errorMessage={"An error occurred, try again later"} />;
+  if (loading || assets == null) {
+    return <Loading />;
   }
 
   return (

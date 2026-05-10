@@ -134,15 +134,15 @@ const SectorsAlliasDashboard : React.FC = () => {
     }
   }
 
-  if (loading) {
+  if (hasError) {
     return (
-      <Loading />
+      <ErrorContainer errorMessage={"An error occurred, try again later"} />
     );
   }
 
-  if(sectorAllias == null || hasError ) {
+  if (loading || sectorAllias == null) {
     return (
-      <ErrorContainer errorMessage={"An error occured, try again later"} />
+      <Loading />
     );
   }
 

@@ -112,12 +112,12 @@ const ForexDashboard: React.FC = () => {
     }
   };
 
-  if (loading) {
-    return <Loading />;
+  if (hasError) {
+    return <ErrorContainer errorMessage={"An error occurred, try again later"} />;
   }
 
-  if (forexItems == null || hasError) {
-    return <ErrorContainer errorMessage={"An error occured, try again later"} />;
+  if (loading || forexItems == null) {
+    return <Loading />;
   }
 
   return (

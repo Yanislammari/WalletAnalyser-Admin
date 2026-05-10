@@ -28,9 +28,12 @@ export const LimitPicker: React.FC<LimitPickerProps> = ({
       return;
     }
     const closest = availableOptions.reduce((prev, curr) =>
-      Math.abs(curr - limit) < Math.abs(prev - limit) ? curr : prev
+      Math.abs(curr - limit) <= Math.abs(prev - limit)
+        ? curr
+        : prev
     );
     setSelected(closest);
+    onGoTo(closest);
   }, [limit, total]);
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {

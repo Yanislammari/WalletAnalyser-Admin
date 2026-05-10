@@ -183,12 +183,12 @@ const ForexRatesDashboard: React.FC = () => {
     }
   };
 
-  if (loading) {
-    return <Loading />;
+  if (hasError) {
+    return <ErrorContainer errorMessage={"An error occurred, try again later"} />;
   }
 
-  if (forexRates == null || hasError) {
-    return <ErrorContainer errorMessage={"An error occured, try again later"} />;
+  if (loading || forexRates == null) {
+    return <Loading />;
   }
 
   return (

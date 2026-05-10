@@ -134,15 +134,15 @@ const CountriesAlliasDashboard : React.FC = () => {
     }
   }
 
-  if (loading) {
+  if (hasError) {
     return (
-      <Loading />
+      <ErrorContainer errorMessage={"An error occurred, try again later"} />
     );
   }
 
-  if(countryAllias == null || hasError ) {
+  if (loading || countryAllias == null) {
     return (
-      <ErrorContainer errorMessage={"An error occured, try again later"} />
+      <Loading />
     );
   }
 

@@ -133,12 +133,12 @@ const RfrCountryDashboard: React.FC = () => {
     }
   };
 
-  if (loading) {
-    return <Loading />;
+  if (hasError) {
+    return <ErrorContainer errorMessage={"An error occurred, try again later"} />;
   }
 
-  if (rfrCountries == null || hasError) {
-    return <ErrorContainer errorMessage={"An error occured, try again later"} />;
+  if (loading || rfrCountries == null) {
+    return <Loading />;
   }
 
   return (
