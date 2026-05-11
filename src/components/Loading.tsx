@@ -37,7 +37,14 @@ const Loading: React.FC<LoadingProps> = ({ style, spinnerSize = 50, fullPage = t
 
   return (
     <div style={containerStyle}>
-      <div style={spinnerStyle} />
+      <style>{`
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+        .spinner { animation: spin 1s linear infinite; }
+      `}</style>
+      <div style={spinnerStyle} className="spinner" />
     </div>
   );
 };

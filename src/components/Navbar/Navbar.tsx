@@ -28,7 +28,7 @@ const Navbar: React.FC = () => {
         {menuItems.map((item, index) => (
           <li key={index}>
             <button
-              className={`sidenav-item ${location.pathname === item.path ? 'sidenav-item--active' : ''}`}
+              className={`sidenav-item ${location.pathname.includes(item.path) ? 'sidenav-item--active' : ''}`}
               onClick={() => navigate(item.path)}
               title={item.label}
             >

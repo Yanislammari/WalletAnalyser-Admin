@@ -1,5 +1,5 @@
 import type { AddSuperUserPayload, BanUserPayload } from "../payloads/UserPayload";
-import type { UserDto, UserResponse, UsersWithDataResponseDto } from "../responses/UserResponse";
+import type { UserDto, UserResponse, UsersWithDataResponseDto, UsersWithLength } from "../responses/UserResponse";
 import { BaseService } from "./BaseService";
 
 class UserService extends BaseService {
@@ -23,8 +23,8 @@ class UserService extends BaseService {
     });
   }
 
-  public async getUsersIntroOffset(offset: number): Promise<UserResponse[]> {
-    return this.request<UserResponse[]>(this.base_url_user + `?offset=${offset}`, {
+  public async getUsersIntroOffset(offset: number, limit : number, search : string): Promise<UsersWithLength> {
+    return this.request<UsersWithLength>(this.base_url_user + `?offset=${offset}&limit=${limit}&search=${search}`, {
       method: "GET",
     });
   }

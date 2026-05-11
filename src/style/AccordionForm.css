@@ -99,29 +99,103 @@
   opacity: 0.7;
 }
 
+.accordion-get-template {
+  font-size: 13px;
+  font-weight: 800;
+  font-size : 1.15rem;
+  color: #5c00fa;
+  cursor: pointer;
+}
+
+.link-red {
+  color: #ff0000;
+}
+
+.link-red:hover {
+  color: blue;
+  text-decoration: underline;
+}
+
 /* Send button */
 .accordion-send-btn {
-  width: 100%;
-  padding: 10px;
-  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 20px;
+  font-size: 13px;
   font-weight: 600;
+  color: white;
   background: #7c3fe8;
-  color: #fff;
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: inherit;
-  transition: background 0.2s;
+  transition: background 0.2s ease;
+  width: 100%;
 }
 
-.accordion-send-btn:hover:not(:disabled) {
-  opacity: 0.5;
+.accordion-send-btn:hover {
+  background: #6a35d0;
 }
 
 .accordion-send-btn:disabled {
-  background: #AFA9EC;
+  background: #a89ee0;
   cursor: not-allowed;
+}
+
+.accordion-file-label {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #5c00fa;
+  background: white;
+  border: 2px solid #5c00fa;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.accordion-file-label:hover {
+  background: #5c00fa;
+  color: white;
+}
+
+/* Wrapper: full width */
+.accordion-datepicker-wrapper {
+  width: 100%;
+}
+
+/* Input: padding + font size */
+.accordion-datepicker-wrapper .accordion-input {
+  padding: 8px 2rem 8px 2.2rem; /* top | right (clear btn) | bottom | left (icon) */
+  font-size: 15px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Icon: glued to the left */
+.accordion-datepicker-wrapper .react-datepicker__calendar-icon {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 0;
+  width: 16px;
+  height: 16px;
+  pointer-events: none;
+}
+
+/* Clear (×) button: right side */
+.accordion-datepicker-wrapper .react-datepicker__close-icon {
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 0;
+}
+
+.accordion-datepicker-wrapper .react-datepicker__close-icon::after {
+  background-color: transparent;
+  color: #888;
+  font-size: 14px;
+  line-height: 1;
 }

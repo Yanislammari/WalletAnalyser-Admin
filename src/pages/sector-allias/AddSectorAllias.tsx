@@ -1,0 +1,74 @@
+import { useState } from "react";
+import Loading from "../../components/Loading";
+import { ConfirmDialog } from "../../components/Confirm/Confirm";
+
+export interface FormProps {
+  sector_allias_name: string;
+}
+
+interface AccordionFormProps {
+  handleSend: () => void;
+  form: FormProps;
+  setForm: React.Dispatch<React.SetStateAction<FormProps>>;
+  loading: boolean;
+}
+
+export default function AddSectorAlliasForm({ handleSend, form, setForm, loading }: AccordionFormProps) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div className="accordion-wrapper">
+
+      {/* Toggle button */}
+      <button className="accordion-toggle" onClick={() => setOpen((o) => !o)}>
+        <span className={`accordion-arrow ${open ? "open" : ""}`}>
+          <svg width="10" height="10" viewBox="0 0 12 12" fill="none">
+            <path
+              d="M2 4L6 8L10 4"
+              stroke="white"
+              strokeWidth="2.2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </span>
+        <span>Create a sector allias</span>
+      </button>
+
+      {/* Accordion body */}
+      {open && (
+        <div className="accordion-body">
+
+          {/* First row: firstName + lastName */}
+          <div className="accordion-name-row">
+            <div className="accordion-field">
+              <label className="accordion-label">Sector allias name</label>
+              <input
+                className="accordion-input"
+                type="text"
+                value={form.sector_allias_name}
+                onChange={(e) => setForm(() => ({ sector_allias_name: e.target.value }))}
+                placeholder="Technology"
+                disabled={loading}
+              />
+            </div>
+          </div>
+
+          {/* Send button */}
+          <ConfirmDialog
+            title="Add a sector"
+            description="This will create a sector allias, you can stil delete it at any time"
+            confirmLabel= "Confirm"
+            cancelLabel="Cancel"
+            variant="danger"
+            onConfirm={handleSend}
+          >
+            <button className="accordion-send-btn" disabled={loading}>
+              {loading ? <Loading fullPage={false} spinnerSize={20} /> : "Send"}
+            </button>
+          </ConfirmDialog>
+        </div>
+      )}
+    </div>
+  );
+}

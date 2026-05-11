@@ -17,13 +17,47 @@ export abstract class BaseService {
     options: RequestInit,
     isFormData = false
   ): Promise<T> {
+    let headers: HeadersInit = {
+      ...(options.headers as Record<string, string>),
+      "Authorization": `Bearer ${localStorage.getItem("token")}`,
+    };
+
+  if (!isFormData) {
+    headers = {
+      ...headers,
+      "Content-Type": "application/json",
+    };
+  }
+
+    const res = await fetch(`${this.baseUrl}${path}`, {
+      ...options,
+      headers,
+    });
+
+    if (!res.ok) {
+      const error = await res.json().catch(() => ({ message: "Request failed" }));
+      /**if (res.status === 401 || res.status === 400) {
+        window.dispatchEvent(new Event("auth:logout"));
+        throw new Error(error.message || "Your session has expired. Please login again.");
+      }**/
+      throw new Error(error.message || "Request failed");
+    }
+
+    return res.json() as Promise<T>; 
+  }
+
+
+  protected async requestBlob(
+    path: string,
+    options: RequestInit,
+    isFormData = false
+  ){
     let headers: HeadersInit = options.headers || {};
 
     if (!isFormData) {
       headers = {
         ...(options.headers as Record<string, string>),
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${localStorage.getItem("token")}`
+        Authorization: `Bearer ${localStorage.getItem("token")}`
       };
     }
 
@@ -41,6 +75,6 @@ export abstract class BaseService {
       throw new Error(error.message || "Request failed");
     }
 
-    return res.json() as Promise<T>; 
+    return res.blob(); 
   }
 }

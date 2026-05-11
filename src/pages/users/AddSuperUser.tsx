@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Loading from "../../components/Loading";
-import "./AddSuperUser.css";
 import { ConfirmDialog } from "../../components/Confirm/Confirm";
+import "../../style/AccordionForm.css";
 
 export interface FormProps {
   firstName: string;

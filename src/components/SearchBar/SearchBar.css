@@ -2,7 +2,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--sb-border, #e5e7eb);
   border-radius: 8px;
   padding: 0 10px;
   height: 36px;
@@ -11,11 +11,11 @@
 }
 
 .searchbar-wrap:focus-within {
-  border-color: white;
+  border-color: var(--sb-color, white);
 }
 
 .searchbar-icon {
-  color: white;
+  color: var(--sb-color, white);
   flex-shrink: 0;
 }
 
@@ -24,26 +24,35 @@
   outline: none;
   background: transparent;
   font-size: 14px;
-  color: white;
+  color: var(--sb-color, white);
   width: 200px;
 }
 
 .searchbar-input::placeholder {
-  color: white;
+  color: var(--sb-color, white);
 }
 
 .searchbar-clear {
   background: none;
   border: none;
   cursor: pointer;
-  color: #ffffff;
+  color: var(--sb-color, white);
   font-size: 12px;
   padding: 0;
   line-height: 1;
   box-shadow: none;
   transition: color 0.15s;
+  text-align: right;
 }
 
 .searchbar-clear:hover {
-  color: #fff;
+  color: var(--sb-color, white);
+}
+
+.searchbar-input-date {
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 14px;
+  color: var(--sb-color, white);
 }

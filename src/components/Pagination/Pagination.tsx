@@ -8,6 +8,7 @@ interface PaginationProps {
   onNext: () => void | Promise<void>;
   onGoTo: (page: number) => void | Promise<void>;
   disabled?: boolean;
+  accentColor?: string;
 }
 
 export const Pagination: React.FC<PaginationProps> = ({
@@ -16,7 +17,8 @@ export const Pagination: React.FC<PaginationProps> = ({
   onPrev,
   onNext,
   onGoTo,
-  disabled
+  disabled,
+  accentColor
 }) => {
   const [input, setInput] = useState<string>("");
 
@@ -33,9 +35,13 @@ export const Pagination: React.FC<PaginationProps> = ({
     }
   };
 
+  const style = accentColor
+  ? ({ "--pagination-accent": accentColor } as React.CSSProperties)
+  : undefined;
+
 
   return (
-    <div className="pagination">
+    <div className="pagination" style={style}>
       <button
         className="pagination-btn"
         onClick={onPrev}
