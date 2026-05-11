@@ -98,9 +98,9 @@ export default function AddCountryAlliasForm({ handleSend, countries, form, setF
                 <SelectSearchable
                   value={selected}
                   options={toSelectOptions(countries, (c) => c.uuid, (c) => c.country_name)}
-                  onChange={(uuid) => {
-                    setSelected(uuid)
-                    setForm((f) => ({ ...f, country_uuid: uuid }))
+                  onChange={(opt) => {
+                    setSelected(opt.uuid)
+                    setForm((f) => ({ ...f, country_uuid: opt.uuid }))
                   }}
                 />
               </td>

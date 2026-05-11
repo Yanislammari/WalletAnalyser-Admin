@@ -99,8 +99,8 @@ export default function AddAssetForm({ handleSend, form, setForm, loading, curre
                   <SelectSearchable
                     value={ form.sector_uuid ?? ""}
                     options={ sectorOptions }
-                    onChange={(uuid) => {
-                      setForm((f) => ({ ...f, sector_uuid : uuid }))
+                    onChange={(opt) => {
+                      setForm((f) => ({ ...f, sector_uuid : opt.uuid }))
                     }}
                   />
                 </div>
@@ -111,9 +111,9 @@ export default function AddAssetForm({ handleSend, form, setForm, loading, curre
                   <SelectSearchable
                     value={ form.country_uuid ?? "" }
                     options={ countryOptions }
-                    onChange={(uuid) => {
+                    onChange={(opt) => {
                       setForm((f) => (
-                        { ...f, country_uuid : uuid }
+                        { ...f, country_uuid : opt.uuid }
                       ))
                     }}
                   />
@@ -129,8 +129,8 @@ export default function AddAssetForm({ handleSend, form, setForm, loading, curre
                 <SelectSearchable
                   value={ form.base_currency_uuid ?? ""}
                   options={ currenciesOptions }
-                  onChange={(uuid) => {
-                    setForm((f) => ({ ...f, base_currency_uuid : uuid }))
+                  onChange={(opt) => {
+                    setForm((f) => ({ ...f, base_currency_uuid : opt.uuid }))
                   }}
                 />
               </div>

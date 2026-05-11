@@ -65,3 +65,20 @@ export interface EtfPatchAssetPayload {
   country_uuid : string
   asset_uuid : string
 }
+
+export interface EtfUpdateHolding {
+  etf_holding : EtfHoldingsAsset
+  sector_concentrations : SectorConcentrationEtf[]
+  country_concentrations : CountryConcentrationEtf[]
+}
+
+export interface EtfPatchEtfHoldingPayload {
+  asset_percentage_concentration_in_etf : string
+  asset_uuid : string
+  asset_name : string
+}
+
+export interface EtfPatchHoldingApi {
+  asset_percentage_concentration_in_etf : number
+  asset_uuid : string
+}

@@ -90,7 +90,7 @@ function EditToggle({ countryName, lastUpdate, options, onSave, onDelete, editin
         <SelectSearchable
           value={selected}
           options={selectOptions}
-          onChange={(uuid) => setSelected(uuid)}
+          onChange={(opt) => setSelected(opt.uuid)}
         />
       </td>
       <td>{new Date(lastUpdate).toLocaleDateString("fr-FR")}</td>

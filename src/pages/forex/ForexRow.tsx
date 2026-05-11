@@ -95,14 +95,14 @@ function EditToggle({ value, onSave, onDelete, options, editing, setEditing }: E
         <SelectSearchable
           value={baseCurrency}
           options={selectOptions}
-          onChange={(uuid) => setBaseCurrency(uuid)}
+          onChange={(opt) => setBaseCurrency(opt.uuid)}
         />
       </td>
       <td style={{ position: "relative" }}>
         <SelectSearchable
           value={quoteCurrency}
           options={selectOptions}
-          onChange={(uuid) => setQuoteCurrency(uuid)}
+          onChange={(opt) => setQuoteCurrency(opt.uuid)}
         />
       </td>
       <td>

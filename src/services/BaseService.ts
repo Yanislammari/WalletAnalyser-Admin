@@ -36,10 +36,10 @@ export abstract class BaseService {
 
     if (!res.ok) {
       const error = await res.json().catch(() => ({ message: "Request failed" }));
-      if (res.status === 401 || res.status === 400) {
+      /**if (res.status === 401 || res.status === 400) {
         window.dispatchEvent(new Event("auth:logout"));
         throw new Error(error.message || "Your session has expired. Please login again.");
-      }
+      }**/
       throw new Error(error.message || "Request failed");
     }
 

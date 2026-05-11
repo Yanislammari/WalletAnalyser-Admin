@@ -16,7 +16,7 @@ import Forex from "./pages/forex/Forex";
 import ForexRates from "./pages/forexRates/ForexRates";
 import AssetPrices from "./pages/assetPrices/AssetPrices";
 import Etf from "./pages/etf/Etf";
-import EtfConcentration from "./pages/etf/EtfConcentration";
+import EtfConcentration from "./pages/etf_concentration/EtfConcentration";
 import { AssetType } from "./payloads/AssetPayload";
 
 const AppRoutes: React.FC = () => {

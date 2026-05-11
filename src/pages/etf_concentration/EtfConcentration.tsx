@@ -9,12 +9,14 @@ import { useParams } from "react-router-dom";
 import { Pagination } from "../../components/Pagination/Pagination";
 import { LimitPicker } from "../../components/Pagination/LimitPicker";
 import SearchBar from "../../components/SearchBar/SearchBar";
-import type { EtfconcentrationMetaData, EtfPatchAssetPayload } from "../../payloads/EtfConcentrationPayload";
+import type { EtfconcentrationMetaData, EtfPatchEtfHoldingPayload } from "../../payloads/EtfConcentrationPayload";
 import type { CountryNameResponse } from "../../payloads/CountryPayload";
 import CountriesService from "../../services/CountriesService";
 import SectorsService from "../../services/SectorsService";
 import type { SectorNameResponse } from "../../payloads/SectorPayload";
 import { ModifyConcentrationRow } from "./EtfConcentrationRow";
+import UpdateEtfHoldings from "./UpdateEtfHoldings";
+import AddEtfHolding from "./AddEtfConcentration";
 
 const EtfConcentration: React.FC = () => {
   return (
@@ -32,7 +34,8 @@ const EtfConcentrationDashboard: React.FC = () => {
   const [hasError, setHasError] = useState(false);
   const [countries, setCountries] = useState<CountryNameResponse[] | null>(null);
   const [sectors, setSectors] = useState<SectorNameResponse[] | null>(null);
-  const [form, setForm] = useState<EtfPatchAssetPayload>({asset_percentage_concentration_in_etf : 0, sector_uuid : "", country_uuid : "", asset_uuid : ""});
+  const [form, setForm] = useState<EtfPatchEtfHoldingPayload>({asset_percentage_concentration_in_etf : "", asset_name : "", asset_uuid : ""});
+  const [updateForm, setUpdateForm] = useState<string>("")
   const [formLoading, setFormLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [limit, setLimit] = useState(25);
@@ -113,23 +116,26 @@ const EtfConcentrationDashboard: React.FC = () => {
     setCurrentPage(1);
   };
 
-  /**const handleAddEtfConcentration = async () => {
-    if (!etf_uuid) return;
+  const handleAddEtfConcentration = async () => {
     try {
-      const { name, sector, country, percentage } = form;
-      if (name === "" || sector === "" || country === "" || percentage === 0) {
+      const { asset_uuid, asset_percentage_concentration_in_etf } = form;
+      const percent = Number(asset_percentage_concentration_in_etf)
+      if (asset_uuid === "" || asset_percentage_concentration_in_etf  == "") {
         toast.error("All fields are required");
         return;
       }
       setFormLoading(true);
-      const response = await etfConcentrationService.postEtfConcentration(form, etf_uuid);
+      const response = await etfConcentrationService.postEtfConcentration({asset_uuid, asset_percentage_concentration_in_etf : percent}, etf_uuid!);
       setEtfConcentrations((prev) => {
         if (!prev) return prev;
-        const updated = [...(prev.concentrations ?? []), response].sort((a, b) => a.name.localeCompare(b.name));
+        const updated = [...(prev.etf_asset ?? []), response.etf_holding]
+          .sort((a, b) => b.asset_percentage_concentration_in_etf - a.asset_percentage_concentration_in_etf);
         return {
           ...prev,
-          length: prev.length + 1,
-          concentrations: updated,
+          etf_asset: updated,
+          sector_concentrations : response.sector_concentrations,
+          country_concentrations : response.country_concentrations,
+          length : prev.length + 1
         };
       });
       toast.success("ETF concentration added successfully");
@@ -138,7 +144,7 @@ const EtfConcentrationDashboard: React.FC = () => {
     } finally {
       setFormLoading(false);
     }
-  };**/
+  };
 
   const handleEditEtfConcentration = async (asset_uuid: string, sector_uuid: string, country_uuid: string, asset_percentage_concentration_in_etf : number) => {
     try {
@@ -150,11 +156,13 @@ const EtfConcentrationDashboard: React.FC = () => {
       setEtfConcentrations((prev) => {
         if (!prev) return prev;
         const updated = (prev.etf_asset ?? [])
-          .map((item) => (item.uuid === response.uuid ? response : item))
+          .map((item) => (item.uuid === response.etf_holding.uuid ? response.etf_holding : item))
           .sort((a, b) => b.asset_percentage_concentration_in_etf - a.asset_percentage_concentration_in_etf);
         return {
           ...prev,
           etf_asset: updated,
+          sector_concentrations : response.sector_concentrations,
+          country_concentrations : response.country_concentrations
         };
       });
       toast.success("ETF concentration updated successfully");
@@ -163,27 +171,66 @@ const EtfConcentrationDashboard: React.FC = () => {
     }
   };
 
-  /**const handleDeleteEtfConcentration = async (uuid: string) => {
+  const handleUpdateHoldings = async () => {
+    const toastId = toast.loading(`Uploading concentration etf data. This can take a while ...`);
+    setLoading(true)
+    try {
+      const response = await etfConcentrationService.patchAllEtfConcentration(updateForm, etf_uuid!);
+      setEtfConcentrations(response);
+      toast.success("Update of etf concentration done successfully", { id: toastId });
+    } catch (e: any) {
+      toast.error(e.message, { id: toastId });
+    } finally {
+      setLoading(false)
+    }
+  };
+
+  const handleDeleteEtfConcentration = async (uuid: string) => {
     try {
       const response = await etfConcentrationService.delete(uuid);
-      if (response.message === "Concentration deleted successfully") {
+      if (response.message === "Holding deleted successfully") {
+        const holding = etfConcentrations?.etf_asset.find((v) => v.uuid === uuid);
+        const amount = holding?.asset_percentage_concentration_in_etf ?? 0;
         setEtfConcentrations((prev) => {
           if (!prev) return prev;
-          const updated = prev.concentrations?.filter((item) => item.uuid !== uuid) ?? [];
           return {
             ...prev,
-            concentrations: updated,
+            etf_asset: prev.etf_asset.filter((item) => item.uuid !== uuid) ?? prev.etf_asset,
+
+            country_concentrations: prev.country_concentrations.map((country) => {
+              if ( country.country_uuid === holding?.asset.country?.uuid) {
+                return {
+                  ...country,
+                  percentage_in_country:
+                  country.percentage_in_country - amount,
+                };
+              }
+              return country;
+            }) ?? [],
+
+            sector_concentrations: prev.sector_concentrations?.map((sector) => {
+              if ( sector.sector_uuid === holding?.asset.sector?.uuid) {
+                return {
+                  ...sector,
+                  percentage_in_sector:
+                  sector.percentage_in_sector - amount,
+                };
+              }
+
+              return sector;
+            }) ?? [],
+
             length: prev.length - 1,
           };
         });
-        toast.success("ETF concentration deleted successfully");
-        return;
+
+        return toast.success(response.message);
       }
       toast.error("Something went wrong while deleting this concentration");
     } catch (e: any) {
       toast.error(e.message);
     }
-  };**/
+  };
 
   if (hasError) {
     return <ErrorContainer errorMessage={"An error occurred, try again later"} />;
@@ -197,6 +244,12 @@ const EtfConcentrationDashboard: React.FC = () => {
     <>
       <div className="dash-wrap">
         <Title title={`ETF Concentration management : ${etfConcentrations.etf.official_name}`} />
+
+        <UpdateEtfHoldings handleSend={handleUpdateHoldings} loading={formLoading} form={updateForm} setForm={setUpdateForm} 
+          sectors={etfConcentrations.sector_concentrations} countries={etfConcentrations.country_concentrations}
+        />
+
+        <AddEtfHolding handleSend={handleAddEtfConcentration} form={form} setForm={setForm} loading={formLoading} />
 
         <div className="table-wrap">
           <div className="table-header">
@@ -233,7 +286,7 @@ const EtfConcentrationDashboard: React.FC = () => {
               ) : (
                 etfConcentrations.etf_asset.map((concentration) => (
                   <ModifyConcentrationRow key={concentration.uuid} value={concentration}
-                    countries={countries ?? []} sectors={sectors ?? []} onSave={handleEditEtfConcentration}
+                    countries={countries ?? []} sectors={sectors ?? []} onSave={handleEditEtfConcentration} onDelete={handleDeleteEtfConcentration}
                   />
                 ))
               )}

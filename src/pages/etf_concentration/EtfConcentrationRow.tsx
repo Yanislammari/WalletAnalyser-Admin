@@ -4,15 +4,17 @@ import type { EtfHoldingsAsset } from "../../payloads/EtfConcentrationPayload";
 import { SelectSearchable, toSelectOptions } from "../../components/SelectSearch/SelectSearchable";
 import type { CountryNameResponse } from "../../payloads/CountryPayload";
 import type { SectorNameResponse } from "../../payloads/SectorPayload";
+import { ConfirmDialog } from "../../components/Confirm/Confirm";
 
 interface ModifyConcentrationRowProps {
   value: EtfHoldingsAsset;
   onSave?: (id: string, newSector: string, newCountry: string, newPercentage: number) => void;
+  onDelete?: (id : string) => void
   countries : CountryNameResponse[];
   sectors : SectorNameResponse[];
 }
 
-export function ModifyConcentrationRow({ value, onSave, countries, sectors}: ModifyConcentrationRowProps) {
+export function ModifyConcentrationRow({ value, onSave, onDelete, countries, sectors}: ModifyConcentrationRowProps) {
   const [loading, setLoading] = useState(false);
   const [editing, setEditing] = useState<boolean>(false);
   const [editSector, setEditSector] = useState<string>(value.asset.sector?.uuid ?? "");
@@ -30,7 +32,6 @@ export function ModifyConcentrationRow({ value, onSave, countries, sectors}: Mod
   );
 
   const handleEdit = () => {
-    console.log(value.asset.sector?.uuid)
     setEditSector(value.asset.sector?.uuid ?? "");
     setEditCountry(value.asset.country?.uuid ?? "");
     setEditPercentage(String(value.asset_percentage_concentration_in_etf));
@@ -50,6 +51,10 @@ export function ModifyConcentrationRow({ value, onSave, countries, sectors}: Mod
     setEditPercentage("");
     setEditing(false);
   };
+
+  const handleDelete = () => {
+    onDelete?.(value.uuid)
+  }
 
   if (loading) {
     return (
@@ -88,14 +93,14 @@ export function ModifyConcentrationRow({ value, onSave, countries, sectors}: Mod
         <SelectSearchable
           value={ editSector }
           options={ sectorOptions }
-          onChange={(uuid) => setEditSector(uuid)}
+          onChange={(opt) => setEditSector(opt.uuid)}
         />
       </td>
       <td>
         <SelectSearchable
           value={ editCountry }
           options={ countryOptions }
-          onChange={(uuid) => setEditCountry(uuid)}
+          onChange={(opt) => setEditCountry(opt.uuid)}
         />
       </td>
       <td>
@@ -116,7 +121,7 @@ export function ModifyConcentrationRow({ value, onSave, countries, sectors}: Mod
           <button className="action-btn save-btn" onClick={handleSave} title="Save changes">
             Save
           </button>
-          {/**<ConfirmDialog
+          <ConfirmDialog
             title="Delete concentration"
             description="This will permanently delete this entry. This action cannot be undone."
             confirmLabel="Yes, delete"
@@ -127,7 +132,7 @@ export function ModifyConcentrationRow({ value, onSave, countries, sectors}: Mod
             <button className="action-btn delete-btn" title="Delete">
               Delete
             </button>
-          </ConfirmDialog>**/}
+          </ConfirmDialog>
           <button className="action-btn exit-btn" onClick={handleExit} title="Cancel editing">
             Exit
           </button>

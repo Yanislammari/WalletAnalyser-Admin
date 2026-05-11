@@ -97,9 +97,9 @@ export default function AddForexForm({ handleSend, form, setForm, loading, curre
                         <SelectSearchable
                           value={selected}
                           options={toSelectOptions(currencies, (c) => c.uuid, (c) => c.currency_name)}
-                          onChange={(uuid) => {
-                            setSelected(uuid)
-                            setForm((f) => ({ ...f, base_currency_uuid: uuid }))
+                          onChange={(opt) => {
+                            setSelected(opt.uuid)
+                            setForm((f) => ({ ...f, base_currency_uuid: opt.uuid }))
                           }}
                         />
                       </td>
