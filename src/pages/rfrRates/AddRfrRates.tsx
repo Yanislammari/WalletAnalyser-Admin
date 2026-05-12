@@ -21,10 +21,6 @@ interface AccordionFormProps {
 export default function AddRfrRatesForm({ handleSend, form, setForm, loading }: AccordionFormProps) {
   const [open, setOpen] = useState(false);
 
-  const dateValue = form.rfr_date
-    ? form.rfr_date.toLocaleDateString("fr-FR")
-    : "";
-
   return (
     <div className="accordion-wrapper">
 

@@ -57,6 +57,9 @@ const RfrRatesDashboard : React.FC = () => {
         setLimit(response.length < 100 ? response.length < 50 ? 25 : 50 : 100);
         setRfrRates(response);
       } catch (error: any) {
+        if(rfrRates == null) {
+          setHasError(true)
+        }
         toast.error(error.message);
       } finally {
         setPageLoading(false);

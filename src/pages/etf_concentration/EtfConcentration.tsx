@@ -57,7 +57,6 @@ const EtfConcentrationDashboard: React.FC = () => {
         setEtfConcentrations(response);
       } catch (error: any) {
         setHasError(true)
-        toast.error(error.message);
       } finally {
         setLoading(false);
       }

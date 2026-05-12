@@ -29,7 +29,7 @@ const ForexDashboard: React.FC = () => {
   const [hasError, setHasError] = useState(false);
   const [search, setSearch] = useState("");
   const [form, setForm] = useState<FormProps>({ file: null, base_currency_uuid : "" });
-  const [formLoading, setFormLoading] = useState(false);
+  const [formLoading] = useState(false);
 
   useEffect(() => {
     const fetchForexItems = async () => {

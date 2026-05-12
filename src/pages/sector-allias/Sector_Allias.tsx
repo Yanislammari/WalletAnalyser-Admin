@@ -11,7 +11,6 @@ import SectorAlliasesService from "../../services/SectorAlliasService";
 import { SectorAlliasRow } from "./Sector_allias_component";
 import type { FormProps } from "./AddSectorAllias";
 import AddSectorAlliasForm from "./AddSectorAllias";
-import { SectorRow } from "../sectors/Sector_components";
 
 const SectorsAllias: React.FC = () => {
   return (

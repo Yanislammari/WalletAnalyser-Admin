@@ -55,6 +55,9 @@ const ForexRatesDashboard: React.FC = () => {
         setLimit(response.length < 100 ? response.length < 50 ? 25 : 50 : 100);
         setForexRates(response);
       } catch (error: any) {
+        if(forexRates == null) {
+          setHasError(true)
+        }
         toast.error(error.message);
       } finally {
         setPageLoading(false);

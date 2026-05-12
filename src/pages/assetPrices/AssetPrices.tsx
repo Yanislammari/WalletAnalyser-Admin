@@ -62,7 +62,6 @@ const AssetPricesDashboard: React.FC<AssetPriceProps> = (props : AssetPriceProps
 
   useEffect(()=>{
     const fetchOthers = async () => {
-      setLoading(true);
       try {
         const [sectorsResponse, countriesResponse, currenciesResponse] = await Promise.all([
           SectorsService.getInstance().getSectors(),
@@ -72,12 +71,7 @@ const AssetPricesDashboard: React.FC<AssetPriceProps> = (props : AssetPriceProps
         setSectors(sectorsResponse.sectors);
         setCountries(countriesResponse.countries);
         setCurrencies(currenciesResponse.currencies);
-      } catch (error: any) {
-        setHasError(true);
-        toast.error(error.message);
-      } finally {
-        setLoading(false);
-      }
+      } catch (error: any) {}
     };
 
     fetchOthers()
@@ -98,6 +92,9 @@ const AssetPricesDashboard: React.FC<AssetPriceProps> = (props : AssetPriceProps
         setLimit(response.length < 100 ? (response.length < 50 ? 25 : 50) : 100);
         setAssetPrices(response);
       } catch (error: any) {
+        if( assetPrices == null) {
+          setHasError(true)
+        }
         toast.error(error.message);
       } finally {
         setPageLoading(false);

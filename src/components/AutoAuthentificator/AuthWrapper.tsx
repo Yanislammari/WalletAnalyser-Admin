@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../providers/AuthProvider";
+import Loading from "../Loading";
 
 interface AuthWrapperProps {
   children: React.ReactNode;
@@ -16,7 +17,7 @@ const AuthWrapper: React.FC<AuthWrapperProps> = ({ children }) => {
   }, []);
 
   if (isAuthentificated === null) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   if (!isAuthentificated) {
