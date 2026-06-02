@@ -66,7 +66,7 @@ export function AssetRow( props :  AssetRowProps) {
         </td>
         <td>
           <button
-            className="edit-btn-etf nav-btn"
+            className="edit-btn nav-btn"
             onClick={(e) => {
               e.stopPropagation();
               navigate(`/etf/${props.value.asset.uuid}/concentration`);

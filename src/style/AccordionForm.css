@@ -10,13 +10,13 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  background-color: #efeeff;
+  background: #fff0db;
   border: none;
   border-radius: 8px;
   cursor: pointer;
   padding: 6px 10px;
   width: 100%;
-  color: #7c3fe8;
+  color: black;
   font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.01em;
@@ -29,7 +29,7 @@
   width: 22px;
   height: 22px;
   border-radius: 50%;
-  background: #7c3fe8;
+  background: #c25e00;
   flex-shrink: 0;
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -103,8 +103,13 @@
   font-size: 13px;
   font-weight: 800;
   font-size : 1.15rem;
-  color: #5c00fa;
+  color: #ff0000;
   cursor: pointer;
+}
+
+.accordion-get-template:hover {
+  color: blue;
+  text-decoration: underline;
 }
 
 .link-red {
@@ -124,9 +129,8 @@
   padding: 8px 20px;
   font-size: 13px;
   font-weight: 600;
-  color: white;
-  background: #7c3fe8;
-  border: none;
+  background: #fcc885;
+  border: 1px solid #fcc885;
   border-radius: 8px;
   cursor: pointer;
   transition: background 0.2s ease;
@@ -134,7 +138,9 @@
 }
 
 .accordion-send-btn:hover {
-  background: #6a35d0;
+  background: #b85900;
+  border-color: #b85900;
+  color: white;
 }
 
 .accordion-send-btn:disabled {
@@ -148,17 +154,17 @@
   padding: 8px 20px;
   font-size: 13px;
   font-weight: 600;
-  color: #5c00fa;
   background: white;
-  border: 2px solid #5c00fa;
+  border: 1px solid black;
   border-radius: 8px;
   cursor: pointer;
   transition: background 0.2s ease, color 0.2s ease;
 }
 
 .accordion-file-label:hover {
-  background: #5c00fa;
-  color: white;
+  background: #ffeacc;
+  border-color : #ffeacc;
+  color: black;
 }
 
 /* Wrapper: full width */

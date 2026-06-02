@@ -8,6 +8,8 @@ import type { SectorNameResponse } from "../../payloads/SectorPayload";
 import { SelectSearchable, toSelectOptions } from "../../components/SelectSearch/SelectSearchable";
 
 interface AddAssetFormProps {
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
   handleSend: () => void;
   form: AssetPatch;
   setForm: React.Dispatch<React.SetStateAction<AssetPatch>>;
@@ -19,9 +21,17 @@ interface AddAssetFormProps {
   type : AssetType
 }
 
-export default function AddAssetForm({ handleSend, form, setForm, loading, currencies, countries, sectors, title=`Add a new stock`, type }: AddAssetFormProps) {
-  const [open, setOpen] = useState(false);
+export default function AddAssetForm({ open : controlledOpen, onOpenChange, handleSend, form, setForm, loading, currencies, countries, sectors, title=`Add a new stock`, type }: AddAssetFormProps) {
+  const [internalOpen, setInternalOpen] = useState(false);
 
+  const isControlled = controlledOpen !== undefined;
+  const open = isControlled ? controlledOpen : internalOpen;
+
+  const setOpen = (val: boolean) => {
+    if (!isControlled) setInternalOpen(val);
+    onOpenChange?.(val);
+  };
+  
   const styleForAllSelect : React.CSSProperties = {
     position : "relative",
     marginTop : "5px",
@@ -46,7 +56,7 @@ export default function AddAssetForm({ handleSend, form, setForm, loading, curre
     <div className="accordion-wrapper">
 
       {/* Toggle button */}
-      <button className="accordion-toggle" onClick={() => setOpen((o) => !o)}>
+      <button className="accordion-toggle" onClick={() => setOpen(!open)}>
         <span className={`accordion-arrow ${open ? "open" : ""}`}>
           <svg width="10" height="10" viewBox="0 0 12 12" fill="none">
             <path

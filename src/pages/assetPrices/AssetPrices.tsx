@@ -55,6 +55,13 @@ const AssetPricesDashboard: React.FC<AssetPriceProps> = (props : AssetPriceProps
   const [to, setTo] = useState("");
   const [from, setFrom] = useState("");
 
+  const [openPanel, setOpenPanel] = useState<string | null>(null);
+
+  const panelProps = (name: string) => ({
+    open: openPanel === name,
+    onOpenChange: (val: boolean) => setOpenPanel(val ? name : null),
+  });
+
   const isValidIso = (date: string) => {
     if (!date) return true;
     return /^\d{4}-\d{2}-\d{2}$/.test(date) && !isNaN(new Date(date).getTime());
@@ -297,13 +304,13 @@ const AssetPricesDashboard: React.FC<AssetPriceProps> = (props : AssetPriceProps
     <>
       <div className="dash-wrap">
         <Title title={`${props.type.toUpperCase()} Price management : ${assetPrices.asset.official_name} (${assetPrices.asset.ticker_name})`} />
-        <AddAssetForm form={patchForm} setForm={setPatchForm} handleSend={handleEditAsset} loading={formLoading} 
+        <AddAssetForm {...panelProps("modify")} form={patchForm} setForm={setPatchForm} handleSend={handleEditAsset} loading={formLoading} 
           currencies={ currencies ?? [] } countries={ countries ?? [] } sectors={ sectors ?? [] } title={`Modify this ${props.type}`} type={props.type} />
-        <ButtonForm handleSend={handleDeleteAsset} loading={formLoading} 
+        <ButtonForm {...panelProps("delete")} handleSend={handleDeleteAsset} loading={formLoading} 
           title={`Delete the ${props.type}`} buttonName={`Delete the ${props.type}`} titleDialog={`Delete the ${props.type}`} textDialog={`This will delete a ${props.type} and all his prices, this cannot be undone`}/>
-        <ButtonForm handleSend={updateStockPrice} loading={formLoading} 
+        <ButtonForm {...panelProps("update price")} handleSend={updateStockPrice} loading={formLoading} 
           title={`Update the ${props.type} price`} buttonName="Get all prices" titleDialog="Fetch all prices from api" textDialog="This will fetch all prices from the external API. This can take quite some times and is hard to undone."/>
-        <AddAssetPricesForm form={form} setForm={setForm} handleSend={handleAddAssetPrice} loading={formLoading} />
+        <AddAssetPricesForm {...panelProps("add price")} form={form} setForm={setForm} handleSend={handleAddAssetPrice} loading={formLoading} />
 
         <div className="table-wrap">
           <table className="country-table">

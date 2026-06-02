@@ -4,41 +4,21 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 5px 12px;
+  padding: 5px 15px;
   font-size: 0.8rem;
   font-weight: 500;
-  color: #7c3fe8;
-  background: transparent;
-  border: 1px solid #7c3fe8;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background 0.15s ease, color 0.15s ease;
-}
-
-.edit-btn-etf {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 5px 12px;
-  font-size: 0.8rem;
-  font-weight: 500;
-  color: #fff;
-  background: #c25e00;
-  border: 1px solid #c25e00;
+  color: black;
+  background: #ffdfb3;
+  border: 1px solid #ffdfb3;
   border-radius: 6px;
   cursor: pointer;
   transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
 }
 
-.edit-btn-etf:hover {
-  background: #ffb347;
-  border-color: #ffb347;
-  color: #1a1a1a;
-}
-
 .edit-btn:hover {
-  background: #7c3fe8;
-  color: #fff;
+  background: #c25e00;
+  border-color: #c25e00;
+  color: white;
 }
 
 /* ───────────────────── Edit mode wrapper ───────────────────── */
@@ -59,7 +39,7 @@
   font-size: 0.875rem;
   color: #1a1a2e;
   background: #fff;
-  border: 1.5px solid #7c3fe8;
+  border: 1px solid #d1b6ff;
   border-radius: 6px;
   outline: none;
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
