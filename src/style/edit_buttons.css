@@ -15,6 +15,27 @@
   transition: background 0.15s ease, color 0.15s ease;
 }
 
+.edit-btn-etf {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #fff;
+  background: #c25e00;
+  border: 1px solid #c25e00;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.edit-btn-etf:hover {
+  background: #ffb347;
+  border-color: #ffb347;
+  color: #1a1a1a;
+}
+
 .edit-btn:hover {
   background: #7c3fe8;
   color: #fff;

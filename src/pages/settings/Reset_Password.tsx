@@ -49,7 +49,7 @@ const ResetPassword = () => {
   return (
         <div className="dash-wrap">
           <p className="dash-title">Admin settings</p>
-          <ChangePassword  form={form} setForm={setForm} handleSend={handleChangePassword} loading={loading}/>*
+          <ChangePassword  form={form} setForm={setForm} handleSend={handleChangePassword} loading={loading}/>
           <ConfirmDialog
             title="Log Out"
             description="This will change log you out, are you sure ?"

@@ -51,7 +51,7 @@ const AssetPricesDashboard: React.FC<AssetPriceProps> = (props : AssetPriceProps
   const [currentPage, setCurrentPage] = useState(1);
   const [limit, setLimit] = useState(100);
   const [pageLoading, setPageLoading] = useState(false);
-  const [patchForm, setPatchForm] = useState<AssetPatch>({country_uuid : null, base_currency_uuid : null, sector_uuid : null, ticker_name : "", type : props.type, official_name : ""});
+  const [patchForm, setPatchForm] = useState<AssetPatch>({display_name:"",country_uuid : null, base_currency_uuid : null, sector_uuid : null, ticker_name : "", type : props.type, official_name : ""});
   const [to, setTo] = useState("");
   const [from, setFrom] = useState("");
 
@@ -228,12 +228,12 @@ const AssetPricesDashboard: React.FC<AssetPriceProps> = (props : AssetPriceProps
   const handleEditAsset = async () => {
     try {
       if(props.type == AssetType.STOCKS) {
-        if( patchForm.base_currency_uuid == null || patchForm.country_uuid == null || patchForm.sector_uuid == null || patchForm.official_name == "" || patchForm.ticker_name == "") {
+        if( patchForm.base_currency_uuid == null || patchForm.country_uuid == null || patchForm.sector_uuid == null || patchForm.official_name == "" || patchForm.ticker_name == "" || patchForm.display_name == "") {
           toast.error("All fields are required")
           return
         }
       } else {
-        if( patchForm.base_currency_uuid == null || patchForm.official_name == "" || patchForm.ticker_name == "") {
+        if( patchForm.base_currency_uuid == null || patchForm.official_name == "" || patchForm.ticker_name == "" || patchForm.display_name == "") {
           toast.error("All fields are required")
           return
         }

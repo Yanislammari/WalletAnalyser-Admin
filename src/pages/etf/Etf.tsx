@@ -34,7 +34,7 @@ const EtfDashboard: React.FC = () => {
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [limit, setLimit] = useState(25);
-  const [form, setForm] = useState<AssetPatch>({country_uuid : null, base_currency_uuid : null, sector_uuid : null, ticker_name : "", type : etfType, official_name : ""});
+  const [form, setForm] = useState<AssetPatch>({display_name : "", country_uuid : null, base_currency_uuid : null, sector_uuid : null, ticker_name : "", type : etfType, official_name : ""});
   const [formLoading, setFormLoading] = useState(false);
 
   useEffect(()=>{
@@ -99,7 +99,7 @@ const EtfDashboard: React.FC = () => {
 
   const handleAddAsset = async () => {
     try {
-      if( form.base_currency_uuid == null || form.official_name == "" || form.ticker_name == "") {
+      if( form.base_currency_uuid == null || form.official_name == "" || form.ticker_name == "" || form.display_name == "") {
         toast.error("All fields are required")
         return
       }

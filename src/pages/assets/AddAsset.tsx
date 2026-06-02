@@ -89,6 +89,17 @@ export default function AddAssetForm({ handleSend, form, setForm, loading, curre
                 disabled={loading}
               />
             </div>
+            <div className="accordion-field">
+              <label className="accordion-label">Display name</label>
+              <input
+                className="accordion-input"
+                type="text"
+                value={form.display_name }
+                onChange={(e) => setForm((f) => ({ ...f, display_name: e.target.value }))}
+                placeholder="Microsoft"
+                disabled={loading}
+              />
+            </div>
           </div>
 
           { type == AssetType.STOCKS && (

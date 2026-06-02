@@ -8,6 +8,7 @@ export type AssetType =
 
 export interface AssetShort {
   uuid: string;
+  display_name : string
   base_currency_uuid: string;
   ticker_name: string;
   official_name: string;
@@ -34,6 +35,7 @@ export interface AssetDatabaseModel {
 }
 
 export interface AssetPatch {
+  display_name : string;
   base_currency_uuid: string | null;
   ticker_name: string;
   type : AssetType;
