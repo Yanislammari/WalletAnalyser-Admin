@@ -21,8 +21,8 @@ function EditToggle({ value, onSave, onDelete, options, editing, setEditing }: E
   );
 
   const [loading, setLoading] = useState(false);
-  const [baseCurrency, setBaseCurrency] = useState(value.forex.baseCurrency.uuid);
-  const [quoteCurrency, setQuoteCurrency] = useState(value.forex.quoteCurrency.uuid); 
+  const [baseCurrency, setBaseCurrency] = useState(value.forex.baseCurrency?.uuid ?? "");
+  const [quoteCurrency, setQuoteCurrency] = useState(value.forex.quoteCurrency?.uuid ?? "");
 
 
   useEffect(() => {
@@ -66,8 +66,8 @@ function EditToggle({ value, onSave, onDelete, options, editing, setEditing }: E
   if (!editing) {
     return (
       <>
-        <td>{value.forex.baseCurrency.currency_name}</td>
-        <td>{value.forex.quoteCurrency.currency_name}</td>
+        <td>{value.forex.baseCurrency?.currency_name ?? ""}</td>
+        <td>{value.forex.quoteCurrency?.currency_name ?? ""}</td>
         <td>
           {value.last_update
             ? new Date(value.last_update).toLocaleDateString("fr-FR")

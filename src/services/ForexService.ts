@@ -16,8 +16,8 @@ class ForexService extends BaseService {
     return this.requestBlob(this.base_url_forex + "excel-template", { method: "GET" });
   }
 
-  public async getForexItems(): Promise<ForexListMetaData> {
-    return this.request<ForexListMetaData>(this.base_url_forex, { method: "GET" });
+  public async getForexItems(search : string, limit : number, offset : number): Promise<ForexListMetaData> {
+    return this.request<ForexListMetaData>(this.base_url_forex + `?search=${search}&limit=${limit}&offset=${offset}`, { method: "GET" });
   }
 
   public async postForex(payload: PostForexPayload): Promise<ForexListMessage> {
