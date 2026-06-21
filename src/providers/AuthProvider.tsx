@@ -110,7 +110,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }, [authService]);
 
   const logout = useCallback(() => {
-    console.log("Got Event")
     setUser(null);
     setToken(null);
     setIsAuthentificated(false)
