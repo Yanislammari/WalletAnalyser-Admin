@@ -8,7 +8,6 @@ import { useNavigate, useLocation } from "react-router-dom";
 interface AuthContextType {
   user: User | null;
   token: string | null;
-  isAuthentificated: boolean | null;
   login: (email: string, password: string) => Promise<void>;
   login2Fa: (code: string) => Promise<void>;
   resend2Fa: () => Promise<void>;
@@ -40,7 +39,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const authService = AuthService.getInstance();
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
-  const [isAuthentificated, setIsAuthentificated] = useState<boolean | null>(null)
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -66,7 +64,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
       setToken(response.token);
       setUser(mappedUser);
-      setIsAuthentificated(true)
 
       localStorage.setItem("token", response.token);
       localStorage.setItem("user", JSON.stringify(mappedUser));
@@ -101,18 +98,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const mappedUser = mapUserResponseToUser(user);
       setUser(mappedUser);
       localStorage.setItem("user", JSON.stringify(mappedUser));
-      setIsAuthentificated(true)
     }
     catch (error: any) {
       console.log(error.message)
-      setIsAuthentificated(false)
     }
   }, [authService]);
 
   const logout = useCallback(() => {
     setUser(null);
     setToken(null);
-    setIsAuthentificated(false)
     if (location.pathname !== "/") {
       localStorage.removeItem("token");
       localStorage.removeItem("user");
@@ -127,7 +121,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, token, isAuthentificated, login, login2Fa, resend2Fa, checkAuth ,logout }}>
+    <AuthContext.Provider value={{ user, token, login, login2Fa, resend2Fa, checkAuth ,logout }}>
       {children}
     </AuthContext.Provider>
   );

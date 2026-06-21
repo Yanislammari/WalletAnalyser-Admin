@@ -17,6 +17,7 @@ import AssetPrices from "./pages/assetPrices/AssetPrices";
 import Etf from "./pages/etf/Etf";
 import EtfConcentration from "./pages/etf_concentration/EtfConcentration";
 import { AssetType } from "./payloads/AssetPayload";
+import NotFoundPage from "./pages/DefaultPage";
 
 const AppRoutes: React.FC = () => {
   return (
@@ -38,6 +39,7 @@ const AppRoutes: React.FC = () => {
         <Route path="/forex" element={<Forex/>} />
         <Route path="/forex/:forex_uuid" element={<ForexRates/>} />
         <Route path="/settings" element={<SettingsPage />} />
+        <Route path="*" element={<NotFoundPage/>}/>
     </Routes>
   );
 }
